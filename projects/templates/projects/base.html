@@ -1,10 +1,9 @@
 {% load static %}
 {% url 'home' as home_url %}
 {% url 'about' as about_url %}
-{% url 'account_login' as login_url %}
-{% url 'account_signup' as signup_url %}
-{% url 'account_logout' as logout_url %}
-{% url 'messaging:messages' as messages_url %}
+{% url 'full_stack' as full_stack_url %}
+{% url 'games' as games_url %}
+
 
 <!DOCTYPE html>
 <html class="h-100" lang="en">
@@ -12,7 +11,7 @@
 <head>
     <title>Vitor's Portfolio</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="shortcut icon" type="image/x-icon" href="{% static 'images/SparkDatingLogo.ico' %}" />
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}" />
 
     <!-- Google Fonts CSS -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -38,7 +37,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-white">
     <div class="container-fluid">
         <a class="navbar-brand fw-bold" href="{% url 'home' %}">
-            <img src="{% static 'images/SparkDatingText.png' %}" alt="Spark Dating Logo" class="img-fluid" style="max-width: 100px;">
+            Vitor's Portfolio
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
                 aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,36 +52,16 @@
                 <li class="nav-item">
                     <a class="nav-link {% if request.path == about_url %}active{% endif %}" href="{{ about_url }}">About</a>
                 </li>
-
-                {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link {% if request.path == '/my-profile/' %}active{% endif %}" href="{% url 'my_profile' %}">My Profile</a>
+                    <a class="nav-link {% if request.path == full_stack_url %}active{% endif %}" href="{{ full_stack_url }}">Full Stack Projects</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if request.path == '/messaging/matches/' %}active{% endif %}" href="{% url 'messaging:match_list' %}">Messages</a>
+                    <a class="nav-link {% if request.path == games_url %}active{% endif %}" href="{{ games_url }}">Game Projects</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if request.path == logout_url %}active{% endif %}" aria-current="page" href="{% url 'account_logout' %}">Logout</a>
-                </li>
-
-                {% else %}
-                <li class="nav-item">
-                    <a class="nav-link {% if request.path == signup_url %}active{% endif %}" aria-current="page"
-                       href="{% url 'account_signup' %}">Register</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {% if request.path == login_url %}active{% endif %}" aria-current="page" href="{% url 'account_login' %}">Login</a>
-                </li>
-                {% endif %}
             </ul>
-            {% if user.is_authenticated %}
-            <p class="text-end m-3">You are logged in as {{ user }}</p>
-            {% else %}
-            <p class="text-end m-3">You are not logged in</p>
-            {% endif %}
             <span class="navbar-text text-muted" style="color: var(--primary-color);">
-                    Find your match
-                </span>
+                Vitor's Portfolio
+            </span>
         </div>
     </div>
 </nav>
@@ -118,7 +97,6 @@
         <a href="https://github.com/VitorBarbosaDev" target="_blank">
             <i class="fab fa-github-square ms-3"></i>
         </a>
-
     </p>
 </footer>
 

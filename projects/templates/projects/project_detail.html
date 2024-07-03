@@ -1,0 +1,14 @@
+{% extends "projects/base.html" %}
+{% load custom_filters %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ project.title }}</h1>
+    <img src="{{ project.image.url }}" class="img-fluid" alt="{{ project.title }}" style="min-width: 300px; max-width: 100%; max-height: 500px;">
+    <p>{{ project.description|truncate_words:100|safe }}</p>
+    <a href="{{ project.github_link }}" class="btn btn-primary">GitHub</a>
+    {% if project.live_link %}
+    <a href="{{ project.live_link }}" class="btn btn-secondary">Live Demo</a>
+    {% endif %}
+</div>
+{% endblock content %}
