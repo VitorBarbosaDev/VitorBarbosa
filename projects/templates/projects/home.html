@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Vitor's Portfolio</title>
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-</head>
-<body>
+{% extends "projects/base.html" %}
+
+{% block content %}
 <div class="container">
     <h1>My Projects</h1>
     <div class="row">
@@ -29,5 +24,4 @@
     <h1>My CV</h1>
     <a href="{{ cv.resume.url }}" class="btn btn-primary">Download CV</a>
 </div>
-</body>
-</html>
+{% endblock content %}
