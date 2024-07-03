@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vitor's Portfolio</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+<body>
+<div class="container">
+    <h1>My Projects</h1>
+    <div class="row">
+        {% for project in projects %}
+        <div class="col-md-4">
+            <div class="card">
+                <img src="{{ project.image.url }}" class="card-img-top" alt="{{ project.title }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ project.title }}</h5>
+                    <p class="card-text">{{ project.description }}</p>
+                    <a href="{{ project.github_link }}" class="btn btn-primary">GitHub</a>
+                    {% if project.live_link %}
+                    <a href="{{ project.live_link }}" class="btn btn-secondary">Live Demo</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <h1>My CV</h1>
+    <a href="{{ cv.resume.url }}" class="btn btn-primary">Download CV</a>
+</div>
+</body>
+</html>
