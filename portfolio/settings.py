@@ -17,7 +17,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 DEBUG = True if os.environ.get("DEVELOPMENT") == "True" else False
 
-ALLOWED_HOSTS = ['.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['.herokuapp.com', '127.0.0.1',' http://vitorbarbosadev.com', 'vitorbarbosadev.com', 'www.vitorbarbosadev.com']
 
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
