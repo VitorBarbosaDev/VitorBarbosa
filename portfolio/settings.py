@@ -10,6 +10,7 @@ load_dotenv()
 if os.path.isfile('env.py'):
     import env
 
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
@@ -17,10 +18,11 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 DEBUG = True if os.environ.get("DEVELOPMENT") == "True" else False
 
-ALLOWED_HOSTS = ['.herokuapp.com', '127.0.0.1',' http://vitorbarbosadev.com', 'vitorbarbosadev.com', 'www.vitorbarbosadev.com']
+ALLOWED_HOSTS = ['.herokuapp.com', '127.0.0.1', 'vitorbarbosadev.com', 'www.vitorbarbosadev.com']
 
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 3600

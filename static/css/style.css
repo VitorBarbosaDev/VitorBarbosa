@@ -111,3 +111,7 @@ footer a {
     max-height: 500px;
     object-fit: cover;
 }
+
+.rounded-circle {
+    border-radius: 05% !important;
+}
