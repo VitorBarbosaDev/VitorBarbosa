@@ -24,3 +24,4 @@ def project_detail(request, pk):
     project = get_object_or_404(Project, pk=pk)
     template = f"projects/project_detail_{project.template}.html"
     return render(request, template, {'project': project})
+

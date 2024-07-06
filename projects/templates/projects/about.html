@@ -1,8 +1,12 @@
 {% extends "projects/base.html" %}
+{% load custom_filters %}
 
 {% block content %}
 <div class="container">
     <h1>About Me</h1>
+    <div class="col-md-4">
+        <img src="{{ profile.image.url }}" class="img-fluid rounded-circle mb-3" alt="Vitor Barbosa">
+    </div>
     <p><strong>Vitor Barbosa</strong></p>
     <p>Junior Full Stack Developer</p>
     <p>Email: <a href="mailto:vitorbarbosa1301@gmail.com">vitorbarbosa1301@gmail.com</a> | Phone: 083-864-7921</p>
@@ -13,11 +17,13 @@
     </p>
 
     <h2>Executive Summary</h2>
-    <p>Junior Software Developer with a Bachelor of Science in Computing in Games Development and a Bachelor
-        of Science Honors in Software Development. Currently pursuing a Diploma in Full Stack Software
-        Development. Proficient in C++, C#, Python, HTML, and Java. Eager to break into the tech industry as part of a
-        dynamic development team where I can grow and contribute. Skilled in communication, leadership, and
-        problem-solving.</p>
+    <p>Junior Software Developer with a Bachelor of Science in Computing in Games Development,
+        a Bachelor of Science Honors in Software Development,
+        and a Diploma in Full Stack Software Development.
+        Proficient in C++, C#, Python, HTML, Java, and experienced with modern web development frameworks.
+        Eager to break into the tech industry as part of a dynamic development team where I can grow and contribute.
+        Skilled in communication, leadership, and problem-solving. Experienced in web development,
+        game development, and systems engineering, with a strong foundation in both front-end and back-end technologies.</p>
 
     <h2>Education</h2>
     <ul>

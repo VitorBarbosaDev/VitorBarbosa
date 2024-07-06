@@ -176,3 +176,74 @@ Not Found: /favicon.ico
 Not Found: /favicon.ico
 /Users/vitor/Documents/GitHub/VitorBarbosa/projects/views.py changed, reloading.
 Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Starting new HTTPS connection (1): api.cloudinary.com:443
+https://api.cloudinary.com:443 "POST /v1_1/dtbtvoewx/image/upload HTTP/1.1" 200 None
+Resetting dropped connection: api.cloudinary.com
+https://api.cloudinary.com:443 "POST /v1_1/dtbtvoewx/image/upload HTTP/1.1" 200 None
+https://api.cloudinary.com:443 "POST /v1_1/dtbtvoewx/image/upload HTTP/1.1" 200 None
+https://api.cloudinary.com:443 "POST /v1_1/dtbtvoewx/image/upload HTTP/1.1" 200 None
+https://api.cloudinary.com:443 "POST /v1_1/dtbtvoewx/image/upload HTTP/1.1" 200 None
+https://api.cloudinary.com:443 "POST /v1_1/dtbtvoewx/image/upload HTTP/1.1" 200 None
+https://api.cloudinary.com:443 "POST /v1_1/dtbtvoewx/image/upload HTTP/1.1" 200 None
+https://api.cloudinary.com:443 "POST /v1_1/dtbtvoewx/image/upload HTTP/1.1" 200 None
+https://api.cloudinary.com:443 "POST /v1_1/dtbtvoewx/image/upload HTTP/1.1" 200 None
+https://api.cloudinary.com:443 "POST /v1_1/dtbtvoewx/image/upload HTTP/1.1" 200 None
+https://api.cloudinary.com:443 "POST /v1_1/dtbtvoewx/image/upload HTTP/1.1" 200 None
+https://api.cloudinary.com:443 "POST /v1_1/dtbtvoewx/image/upload HTTP/1.1" 200 None
+https://api.cloudinary.com:443 "POST /v1_1/dtbtvoewx/image/upload HTTP/1.1" 200 None
+https://api.cloudinary.com:443 "POST /v1_1/dtbtvoewx/image/upload HTTP/1.1" 200 None
+/Users/vitor/Documents/GitHub/VitorBarbosa/projects/models.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/vitor/Documents/GitHub/VitorBarbosa/projects/views.py changed, reloading.
+Watching for file changes with StatReloader
+/Users/vitor/Documents/GitHub/VitorBarbosa/projects/views.py changed, reloading.
+Watching for file changes with StatReloader
+Internal Server Error: /project/3/
+Traceback (most recent call last):
+  File "/Users/vitor/Documents/GitHub/VitorBarbosa/myenv/lib/python3.9/site-packages/django/db/backends/utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+psycopg2.errors.UndefinedColumn: column projects_project.trailer_url does not exist
+LINE 1: ...oject"."featured", "projects_project"."template", "projects_...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/vitor/Documents/GitHub/VitorBarbosa/myenv/lib/python3.9/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/Users/vitor/Documents/GitHub/VitorBarbosa/myenv/lib/python3.9/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/Users/vitor/Documents/GitHub/VitorBarbosa/projects/views.py", line 24, in project_detail
+    project = get_object_or_404(Project, pk=pk)
+  File "/Users/vitor/Documents/GitHub/VitorBarbosa/myenv/lib/python3.9/site-packages/django/shortcuts.py", line 85, in get_object_or_404
+    return queryset.get(*args, **kwargs)
+  File "/Users/vitor/Documents/GitHub/VitorBarbosa/myenv/lib/python3.9/site-packages/django/db/models/query.py", line 633, in get
+    num = len(clone)
+  File "/Users/vitor/Documents/GitHub/VitorBarbosa/myenv/lib/python3.9/site-packages/django/db/models/query.py", line 380, in __len__
+    self._fetch_all()
+  File "/Users/vitor/Documents/GitHub/VitorBarbosa/myenv/lib/python3.9/site-packages/django/db/models/query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+  File "/Users/vitor/Documents/GitHub/VitorBarbosa/myenv/lib/python3.9/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+  File "/Users/vitor/Documents/GitHub/VitorBarbosa/myenv/lib/python3.9/site-packages/django/db/models/sql/compiler.py", line 1562, in execute_sql
+    cursor.execute(sql, params)
+  File "/Users/vitor/Documents/GitHub/VitorBarbosa/myenv/lib/python3.9/site-packages/django/db/backends/utils.py", line 102, in execute
+    return super().execute(sql, params)
+  File "/Users/vitor/Documents/GitHub/VitorBarbosa/myenv/lib/python3.9/site-packages/django/db/backends/utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+  File "/Users/vitor/Documents/GitHub/VitorBarbosa/myenv/lib/python3.9/site-packages/django/db/backends/utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "/Users/vitor/Documents/GitHub/VitorBarbosa/myenv/lib/python3.9/site-packages/django/db/backends/utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+  File "/Users/vitor/Documents/GitHub/VitorBarbosa/myenv/lib/python3.9/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/vitor/Documents/GitHub/VitorBarbosa/myenv/lib/python3.9/site-packages/django/db/backends/utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+django.db.utils.ProgrammingError: column projects_project.trailer_url does not exist
+LINE 1: ...oject"."featured", "projects_project"."template", "projects_...
+                                                             ^
+
+Watching for file changes with StatReloader

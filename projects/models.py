@@ -21,6 +21,7 @@ class Project(models.Model):
     category = models.CharField(max_length=10, choices=CATEGORY_CHOICES, default='Full Stack')
     featured = models.BooleanField(default=False)
     template = models.CharField(max_length=20, choices=TEMPLATE_CHOICES, default='default')
+    trailer_url = models.URLField(blank=True, null=True)  # New field for trailer video URL
 
     def __str__(self):
         return self.title

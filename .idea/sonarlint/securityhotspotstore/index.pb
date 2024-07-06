@@ -27,3 +27,7 @@ A
 projects/admin.py,5/6/5619ef0dd089d97ea91621ff32976fbf0045793d
 A
 projects/tests.py,b/4/b4d15f26e0fc2175f4819f2cdbaf9e31dc8b0520
+W
+'projects/templatetags/custom_filters.py,2/7/275f9c02a7d15749841175e2cdd26c1d42d24018
+V
+&projects/templates/projects/about.html,7/a/7a548f8896a33e25f178a8d049326c48732e7622
