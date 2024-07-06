@@ -1,0 +1,23 @@
+{% extends "projects/base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ project.title }}</h1>
+    <div class="row">
+        <div class="col-md-8">
+            <img src="{{ project.image.url }}" class="img-fluid" alt="{{ project.title }}">
+            <p>{{ project.description|safe }}</p>
+        </div>
+        <div class="col-md-4">
+            {% for image in project.additional_images.all %}
+            <img src="{{ image.image.url }}" class="img-fluid mb-3" alt="{{ image.caption }}">
+            <p>{{ image.caption }}</p>
+            {% endfor %}
+        </div>
+    </div>
+    <a href="{{ project.github_link }}" class="btn btn-primary">GitHub</a>
+    {% if project.live_link %}
+    <a href="{{ project.live_link }}" class="btn btn-secondary">Live Demo</a>
+    {% endif %}
+</div>
+{% endblock content %}

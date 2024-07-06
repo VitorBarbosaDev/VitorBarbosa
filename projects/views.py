@@ -9,7 +9,8 @@ def home(request):
 
 def about(request):
     profile = Profile.objects.first()
-    return render(request, 'projects/about.html', {'profile': profile})
+    cv = CV.objects.first()
+    return render(request, 'projects/about.html', {'profile': profile, 'cv': cv})
 
 def full_stack(request):
     projects = Project.objects.filter(category='Full Stack')
@@ -21,4 +22,5 @@ def games(request):
 
 def project_detail(request, pk):
     project = get_object_or_404(Project, pk=pk)
-    return render(request, 'projects/project_detail.html', {'project': project})
+    template = f"projects/project_detail_{project.template}.html"
+    return render(request, template, {'project': project})

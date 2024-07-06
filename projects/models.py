@@ -6,16 +6,31 @@ class Project(models.Model):
         ('Full Stack', 'Full Stack'),
         ('Games', 'Games'),
     ]
+    TEMPLATE_CHOICES = [
+        ('default', 'Default'),
+        ('gallery', 'Gallery'),
+        ('feature', 'Feature'),
+    ]
+
     title = models.CharField(max_length=100)
     description = models.TextField()
     image = CloudinaryField('projects/', default='default.jpg')
+    additional_images = models.ManyToManyField('ProjectImage', blank=True)
     github_link = models.URLField()
     live_link = models.URLField(blank=True, null=True)
     category = models.CharField(max_length=10, choices=CATEGORY_CHOICES, default='Full Stack')
-    featured = models.BooleanField(default=False)  # New field
+    featured = models.BooleanField(default=False)
+    template = models.CharField(max_length=20, choices=TEMPLATE_CHOICES, default='default')
 
     def __str__(self):
         return self.title
+
+class ProjectImage(models.Model):
+    image = CloudinaryField('projects/')
+    caption = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return self.caption or "Project Image"
 
 class CV(models.Model):
     resume = CloudinaryField('resume')

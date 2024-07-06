@@ -113,5 +113,31 @@ footer a {
 }
 
 .rounded-circle {
-    border-radius: 05% !important;
+    border-radius: 5% !important;
+}
+
+.download-cv-btn {
+    background-color: #4caf50; /* Match the green color */
+    border-color: #4caf50; /* Match the green color */
+    color: #e0e0e0; /* Light text color */
+    margin-left: auto; /* Push to the right */
+}
+
+.download-cv-btn:hover {
+    background-color: #45a049; /* Slightly darker green on hover */
+    border-color: #45a049; /* Slightly darker green on hover */
+}
+
+/* style.css */
+
+.carousel-image {
+    max-height: 500px; /* Set this to your desired max height */
+    object-fit: cover; /* Ensures the image covers the entire container */
+    cursor: pointer; /* Changes cursor to pointer to indicate it's clickable */
+}
+
+/* Add this block for the modal image to ensure it scales properly */
+.modal-content .img-fluid {
+    max-width: 100%;
+    height: auto;
 }
