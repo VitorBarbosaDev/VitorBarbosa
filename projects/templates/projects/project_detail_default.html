@@ -5,7 +5,14 @@
     <h1>{{ project.title }}</h1>
     <img src="{{ project.image.url }}" class="img-fluid mb-3" alt="{{ project.title }}">
     <p>{{ project.description|safe }}</p>
-
+    {% if project.trailer_url %}
+    <div class="trailer mb-3">
+        <h5>Watch Trailer</h5>
+        <div class="embed-responsive embed-responsive-16by9 custom-video-container">
+            <iframe class="embed-responsive-item custom-video-iframe" src="{{ project.trailer_url|youtube_embed }}" allowfullscreen></iframe>
+        </div>
+    </div>
+    {% endif %}
     {% if project.additional_images.all %}
     <div id="projectCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
