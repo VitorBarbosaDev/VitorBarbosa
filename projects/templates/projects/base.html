@@ -59,7 +59,7 @@
                     <a class="nav-link {% if request.path == games_url %}active{% endif %}" href="{{ games_url }}">Game Projects</a>
                 </li>
             </ul>
-            <a href="{{ cv.resume.url }}" class="btn btn-success download-cv-btn" role="button">Download CV</a>
+            <a href="{% static 'files/VitorBarbosaResume2024JuniorDevAugust.pdf' %}" class="btn btn-success download-cv-btn" role="button" target="_blank">Download CV</a>
         </div>
     </div>
 </nav>

@@ -1,6 +1,6 @@
 {% extends "projects/base.html" %}
 {% load custom_filters %} <!-- Load the custom filters -->
-
+{% load static %}
 {% block content %}
 <div class="container">
     <h1>About Me</h1>
@@ -51,6 +51,6 @@
     </div>
 
     <h1>My CV</h1>
-    <a href="{{ cv.resume.url }}" class="btn btn-primary">Download CV</a>
+    <a href="{% static 'files/VitorBarbosaResume2024JuniorDevAugust.pdf' %}" class="btn btn-primary" target="_blank">Download CV</a>
 </div>
 {% endblock content %}
