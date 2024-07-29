@@ -22,7 +22,57 @@
         </div>
     </div>
 
-    <h1>Featured Projects</h1>
+    <h2 class="mt-4">Technical Skillset</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Languages</h5>
+                    <p class="card-text">C++, C#, Python, Java, JavaScript, Kotlin, HTML5, CSS3</p>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Web Development</h5>
+                    <p class="card-text">Django, Flask, React, jQuery, Bootstrap 5, Angular</p>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Database Management</h5>
+                    <p class="card-text">PostgreSQL, MongoDB, MySQL, ElephantSQL</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Cloud Services</h5>
+                    <p class="card-text">Heroku, AWS, Azure, Cloudinary</p>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Payment Processing</h5>
+                    <p class="card-text">Stripe API for secure online transactions</p>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Version Control</h5>
+                    <p class="card-text">Git, GitHub</p>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Other Technologies</h5>
+                    <p class="card-text">Unity, Unreal, Prolog, Unreal Blueprints</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h1 class="mt-4">Featured Projects</h1>
     <div class="row">
         {% for project in projects %}
         <div class="col-md-4">
@@ -50,7 +100,7 @@
         {% endfor %}
     </div>
 
-    <h1>My CV</h1>
+    <h1 class="mt-4">My CV</h1>
     <a href="{% static 'files/VitorBarbosaResume2024JuniorDevAugust.pdf' %}" class="btn btn-primary" target="_blank">Download CV</a>
 </div>
 {% endblock content %}

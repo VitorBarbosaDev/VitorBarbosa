@@ -677,3 +677,4 @@ Traceback (most recent call last):
   File "C:\Users\vmanb\OneDrive\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\base.py", line 606, in find_filter
     raise TemplateSyntaxError("Invalid filter: '%s'" % filter_name)
 django.template.exceptions.TemplateSyntaxError: Invalid filter: 'truncate_words'
+Watching for file changes with StatReloader
