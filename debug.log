@@ -678,3 +678,4 @@ Traceback (most recent call last):
     raise TemplateSyntaxError("Invalid filter: '%s'" % filter_name)
 django.template.exceptions.TemplateSyntaxError: Invalid filter: 'truncate_words'
 Watching for file changes with StatReloader
+Watching for file changes with StatReloader
