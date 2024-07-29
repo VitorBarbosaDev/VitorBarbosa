@@ -1,55 +1,55 @@
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: #121212; /* Dark background for a clean look */
-    color: #e0e0e0; /* Light text for good contrast */
+    background-color: #121212;
+    color: #e0e0e0;
 }
 
 .navbar {
-    background-color: #1a1a1a; /* Dark background for navbar */
-    border-bottom: 2px solid #4caf50; /* Dark green underline for navbar */
+    background-color: #1a1a1a;
+    border-bottom: 2px solid #4caf50;
 }
 
 .navbar-brand {
     font-family: 'Lato', sans-serif;
     font-size: 1.5rem;
-    color: #4caf50; /* Dark green color for branding */
+    color: #4caf50;
 }
 
 .navbar-nav .nav-link {
-    color: #e0e0e0; /* Light text for nav links */
-    font-weight: 700; /* Bold text */
+    color: #e0e0e0;
+    font-weight: 700;
 }
 
 .navbar-nav .nav-link.active {
-    color: #4caf50; /* Dark green text for active nav link */
+    color: #4caf50;
 }
 
 .navbar-toggler {
-    border-color: #4caf50; /* Dark green border for toggler */
+    border-color: #4caf50;
 }
 
 .navbar-toggler-icon {
-    color: #4caf50; /* Dark green icon for toggler */
+    color: #4caf50;
 }
 
 .main-bg {
-    background-color: #1a1a1a; /* Dark background for main content */
+    background-color: #1a1a1a;
 }
 
 .card {
     margin-bottom: 1.5rem;
-    background-color: #2a2a2a; /* Dark card background */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow for cards */
+    background-color: #2a2a2a;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     transition: transform 0.2s;
 }
 
 .card:hover {
-    transform: scale(1.05); /* Slight zoom effect on hover */
+    transform: scale(1.05);
 }
 
 .card-title {
     font-family: 'Lato', sans-serif;
-    color: #4caf50; /* Dark green color for card titles */
+    color: #4caf50;
 }
 
 .btn-primary {
@@ -63,37 +63,37 @@ body {
 }
 
 footer {
-    background-color: #1a1a1a; /* Dark background for footer */
+    background-color: #1a1a1a;
     padding: 1rem 0;
 }
 
 footer p {
     margin: 0;
-    color: #e0e0e0; /* Light text for footer */
+    color: #e0e0e0;
 }
 
 footer a {
-    color: #4caf50; /* Dark green links for footer */
+    color: #4caf50;
 }
 
 .container h1 {
     margin-top: 2rem;
     margin-bottom: 1.5rem;
     font-family: 'Lato', sans-serif;
-    color: #4caf50; /* Dark green color for headings */
+    color: #4caf50;
 }
 
 .alert {
     margin-top: 1rem;
-    background-color: #2a2a2a; /* Dark background for alerts */
-    border-color: #4caf50; /* Dark green border for alerts */
-    color: #e0e0e0; /* Light text for alerts */
+    background-color: #2a2a2a;
+    border-color: #4caf50;
+    color: #e0e0e0;
 }
 
 .btn-close {
     background: transparent;
     border: 0;
-    color: #e0e0e0; /* Light color for close button */
+    color: #e0e0e0;
 }
 
 .card h-100 .card-body {
@@ -117,26 +117,23 @@ footer a {
 }
 
 .download-cv-btn {
-    background-color: #4caf50; /* Match the green color */
-    border-color: #4caf50; /* Match the green color */
-    color: #e0e0e0; /* Light text color */
-    margin-left: auto; /* Push to the right */
+    background-color: #4caf50;
+    border-color: #4caf50;
+    color: #e0e0e0;
+    margin-left: auto;
 }
 
 .download-cv-btn:hover {
-    background-color: #45a049; /* Slightly darker green on hover */
-    border-color: #45a049; /* Slightly darker green on hover */
+    background-color: #45a049;
+    border-color: #45a049;
 }
-
-/* style.css */
 
 .carousel-image {
-    max-height: 500px; /* Set this to your desired max height */
-    object-fit: cover; /* Ensures the image covers the entire container */
-    cursor: pointer; /* Changes cursor to pointer to indicate it's clickable */
+    max-height: 500px;
+    object-fit: cover;
+    cursor: pointer;
 }
 
-/* Add this block for the modal image to ensure it scales properly */
 .modal-content .img-fluid {
     max-width: 100%;
     height: auto;
@@ -144,7 +141,7 @@ footer a {
 
 .custom-video-container {
     position: relative;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    padding-bottom: 56.25%;
     height: 0;
     overflow: hidden;
     max-width: 100%;
@@ -161,7 +158,7 @@ footer a {
 
 @media (min-width: 992px) {
     .custom-video-container {
-        height: 400px; /* Adjust height for desktop */
+        height: 400px;
     }
 }
 
@@ -171,11 +168,210 @@ footer a {
 
 .view-more-images {
     cursor: pointer;
-    color: #007bff; /* Bootstrap primary color */
+    color: #007bff;
     text-decoration: underline;
 }
 
 .view-more-images:hover {
-    color: #0056b3; /* Bootstrap primary darken */
+    color: #0056b3;
     text-decoration: none;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+.navbar {
+    background-color: #1a1a1a;
+    border-bottom: 2px solid #4caf50;
+}
+
+.navbar-brand {
+    font-family: 'Lato', sans-serif;
+    font-size: 1.5rem;
+    color: #4caf50;
+}
+
+.navbar-nav .nav-link {
+    color: #e0e0e0;
+    font-weight: 700;
+}
+
+.navbar-nav .nav-link.active {
+    color: #4caf50;
+}
+
+.navbar-toggler {
+    border-color: #4caf50;
+}
+
+.navbar-toggler-icon {
+    color: #4caf50;
+}
+
+.main-bg {
+    background-color: #1a1a1a;
+}
+
+.card {
+    margin-bottom: 1.5rem;
+    background-color: #2a2a2a;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card-title {
+    font-family: 'Lato', sans-serif;
+    color: #4caf50;
+}
+
+.btn-primary {
+    background-color: #4caf50;
+    border-color: #4caf50;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+footer {
+    background-color: #1a1a1a;
+    padding: 1rem 0;
+}
+
+footer p {
+    margin: 0;
+    color: #e0e0e0;
+}
+
+footer a {
+    color: #4caf50;
+}
+
+.container h1 {
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+    font-family: 'Lato', sans-serif;
+    color: #4caf50;
+}
+
+.alert {
+    margin-top: 1rem;
+    background-color: #2a2a2a;
+    border-color: #4caf50;
+    color: #e0e0e0;
+}
+
+.btn-close {
+    background: transparent;
+    border: 0;
+    color: #e0e0e0;
+}
+
+.card h-100 .card-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-text {
+    flex-grow: 1;
+}
+
+.img-fluid {
+    min-width: 300px;
+    max-width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+}
+
+.rounded-circle {
+    border-radius: 5% !important;
+}
+
+.download-cv-btn {
+    background-color: #4caf50;
+    border-color: #4caf50;
+    color: #e0e0e0;
+    margin-left: auto;
+}
+
+.download-cv-btn:hover {
+    background-color: #45a049;
+    border-color: #45a049;
+}
+
+.carousel-image {
+    max-height: 500px;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.modal-content .img-fluid {
+    max-width: 100%;
+    height: auto;
+}
+
+.custom-video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+    background: #000;
+}
+
+.custom-video-iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+@media (min-width: 992px) {
+    .custom-video-container {
+        height: 400px;
+    }
+}
+
+.additional-image {
+    cursor: pointer;
+}
+
+.view-more-images {
+    cursor: pointer;
+    color: #007bff;
+    text-decoration: underline;
+}
+
+.view-more-images:hover {
+    color: #0056b3;
+    text-decoration: none;
+}
+
+a[href$=".gif"] {
+    display: none;
+}
+
+.gif-wrapper {
+    text-align: center;
+    max-width: 100%;
+    overflow: hidden;
+    margin-bottom: 15px;
+}
+
+.gif-wrapper img {
+    max-width: 100%;
+    height: auto;
+}
+
+.hidden-url {
+    display: none;
 }
