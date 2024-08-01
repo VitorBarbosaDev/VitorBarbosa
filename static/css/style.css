@@ -375,3 +375,26 @@ a[href$=".gif"] {
 .hidden-url {
     display: none;
 }
+
+.custom-gif {
+    max-width: 80%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Align GIFs to the left on larger screens and center on smaller screens */
+@media (min-width: 768px) {
+    .custom-gif {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 767px) {
+    .custom-gif {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}

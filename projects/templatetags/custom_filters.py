@@ -22,7 +22,7 @@ def embed_gifs(value):
     gif_urls = re.findall(r'(https?://media\.giphy\.com/media/\S+\.gif)', value)
 
     for url in gif_urls:
-        img_tag = f'<img src="{url}" alt="GIF" class="img-fluid mb-3 gifs">'
+        img_tag = f'<img src="{url}" alt="GIF" class="img-fluid mb-3 gifs custom-gif">'
 
         # Replace URLs within <a> tags first
         value = re.sub(

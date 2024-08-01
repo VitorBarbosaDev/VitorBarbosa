@@ -4,7 +4,7 @@
 {% block content %}
 <div class="container">
     <h1>{{ project.title }}</h1>
-    <img src="{{ project.image.url }}" class="img-fluid mb-3" alt="{{ project.title }}">
+    <img src="{{ project.image.url }}" class="img-fluid mb-3 project-image" alt="{{ project.title }}">
     <p>{{ project.description|embed_gifs|safe }}</p>
     {% if project.trailer_url %}
     <div class="trailer mb-3">
@@ -86,54 +86,61 @@
 {% endblock content %}
 
 {% block extra_scripts %}
-<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha384-ZvpUoO/+PsbHT63DwELWRZC1zFQdE/hFQxaXVM/DV49tP6Fzj6zi1ARpS6vMYxr" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq7t5D5I3eIIMmgYAaA9B1IpFF+a9I4xD1lGzt5K6RLM50EThT" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgOf+8J5E3KUy/E5Pp+aI5NfAqKhEJ/JFfn3RR5+8nbTov4+1p" crossorigin="anonymous"></script>
+
 <script>
     $(document).ready(function() {
-        console.log('DOM fully loaded and parsed');
 
-        // Select all p elements
-        const pElements = $('p');
-        console.log('Selected p elements:', pElements);
+        // Check if jQuery is available
+        if (typeof $ !== 'undefined') {
 
-        pElements.each(function() {
-            const pElement = $(this);
-            console.log('Processing p element:', pElement);
+            // Select all p elements
+            const pElements = $('p');
 
-            // Select the img element within the p element
-            const imgElement = pElement.find('img');
-            console.log('Selected img element:', imgElement);
+            pElements.each(function() {
+                const pElement = $(this);
 
-            if (imgElement.length) {
-                // Clear the content of the p element
-                pElement.empty();
-                console.log('Cleared p element content');
+                // Select the img element within the p element
+                const imgElement = pElement.find('img');
 
-                // Append the img element back to the p element
-                pElement.append(imgElement);
-                console.log('Appended img element back to p element');
-            } else {
-                console.log('No img element found within this p element');
-            }
-        });
+                if (imgElement.length) {
+                    // Clear the content of the p element
+                    pElement.empty();
 
-        $('#projectCarousel').carousel();
+                    // Append the img element back to the p element
+                    pElement.append(imgElement);
 
-        $('.carousel-image').on('click', function() {
-            var index = $(this).data('slide-to');
-            $('#modalCarousel').carousel(index);
-            $('#imageModal').modal('show');
-        });
+                    // Apply custom styling to GIFs
+                    if (imgElement.attr('src').endsWith('.gif')) {
+                        imgElement.addClass('custom-gif');
+                    }
+                }
+            });
 
-        $('#imageModal').on('shown.bs.modal', function () {
-            $('#modalCarousel').carousel('cycle');
-        }).on('hidden.bs.modal', function () {
-            $('#modalCarousel').carousel('pause');
-        });
+            $('#projectCarousel').carousel();
 
-        // Hide all anchor elements that link to media.giphy.com
-        $('a[href^="https://media.giphy.com"]').hide();
+            $('.carousel-image').on('click', function() {
+                var index = $(this).data('slide-to');
+                $('#modalCarousel').carousel(index);
+                $('#imageModal').modal('show');
+            });
+
+            $('#imageModal').on('shown.bs.modal', function () {
+                $('#modalCarousel').carousel('cycle');
+            }).on('hidden.bs.modal', function () {
+                $('#modalCarousel').carousel('pause');
+            });
+
+            // Hide all anchor elements that link to media.giphy.com
+            $('a[href^="https://media.giphy.com"]').each(function() {
+                $(this).hide();
+
+                // Find the img element within the anchor
+                var gifImage = $(this).find('img');
+
+                // Apply custom styling to GIFs
+                gifImage.addClass('custom-gif');
+            });
+        }
     });
 </script>
 
