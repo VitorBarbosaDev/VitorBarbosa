@@ -1,6 +1,7 @@
 import re
 from django import template
 from django.utils.safestring import mark_safe
+from html import unescape
 
 register = template.Library()
 
@@ -39,3 +40,12 @@ def embed_gifs(value):
         )
 
     return mark_safe(value)
+
+@register.filter(name='html_unescape')
+def html_unescape(value):
+    """Convert HTML entities (e.g., &lt; &gt;) to real characters.
+    Use this before truncatewords_html/safe to render stored HTML correctly.
+    """
+    if value is None:
+        return ''
+    return unescape(value)

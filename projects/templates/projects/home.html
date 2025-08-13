@@ -75,12 +75,12 @@
     <h1 class="mt-4">Featured Projects</h1>
     <div class="row">
         {% for project in projects %}
-        <div class="col-md-4">
+        <div class="col-md-4 pb-4">
             <div class="card h-100"> <!-- Add h-100 class to ensure equal height -->
                 <img src="{{ project.image.url }}" class="card-img-top" alt="{{ project.title }}">
                 <div class="card-body">
                     <h5 class="card-title">{{ project.title }}</h5>
-                    <p class="card-text">{{ project.description|truncate_words:50|safe }}</p> <!-- Apply the custom filter -->
+                    <div class="card-text">{{ project.description|truncatewords_html:50|safe }}</div>
                     {% if project.github_link %}
                     <a href="{{ project.github_link }}" class="btn btn-primary">{{ project.github_label }}</a>
                     {% endif %}

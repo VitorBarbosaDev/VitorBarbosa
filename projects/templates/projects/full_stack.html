@@ -8,12 +8,12 @@
         <!-- Featured Full Stack Projects -->
         {% for project in projects %}
         {% if project.category == 'Full Stack' and project.featured %}
-        <div class="col-md-4">
+        <div class="col-md-4 pb-4">
             <div class="card h-100">
                 <img src="{{ project.image.url }}" class="card-img-top" alt="{{ project.title }}">
                 <div class="card-body">
                     <h5 class="card-title">{{ project.title }}</h5>
-                    <p class="card-text">{{ project.description|truncate_words:50|safe }}</p>
+                    <div class="card-text">{{ project.description|html_unescape|truncatewords_html:50|safe }}</div>
                     {% if project.github_link %}
                     <a href="{{ project.github_link }}" class="btn btn-primary">{{ project.github_label }}</a>
                     {% endif %}
@@ -41,7 +41,7 @@
                 <img src="{{ project.image.url }}" class="card-img-top" alt="{{ project.title }}">
                 <div class="card-body">
                     <h5 class="card-title">{{ project.title }}</h5>
-                    <p class="card-text">{{ project.description|truncate_words:50|safe }}</p>
+                    <div class="card-text">{{ project.description|html_unescape|truncatewords_html:50|safe }}</div>
                     {% if project.github_link %}
                     <a href="{{ project.github_link }}" class="btn btn-primary">{{ project.github_label }}</a>
                     {% endif %}

@@ -400,3 +400,13 @@ a[href$=".gif"] {
         margin-right: auto;
     }
 }
+
+/* Extra bottom padding for card content */
+.card .card-body {
+    padding-bottom: 2rem;
+}
+
+/* Add space under buttons inside cards (works with flex containers) */
+.card .card-body .btn {
+    margin-bottom: 0.75rem;
+}
