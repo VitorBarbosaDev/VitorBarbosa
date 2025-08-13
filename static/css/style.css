@@ -96,7 +96,8 @@ footer a {
     color: #e0e0e0;
 }
 
-.card h-100 .card-body {
+/* Fix invalid selector: target .card with .h-100 utility class */
+.card.h-100 .card-body {
     display: flex;
     flex-direction: column;
 }
@@ -106,8 +107,8 @@ footer a {
 }
 
 .img-fluid {
-    min-width: 300px;
     max-width: 100%;
+    height: auto;
     max-height: 500px;
     object-fit: cover;
 }
@@ -275,7 +276,8 @@ footer a {
     color: #e0e0e0;
 }
 
-.card h-100 .card-body {
+/* Fix invalid selector: target .card with .h-100 utility class */
+.card.h-100 .card-body {
     display: flex;
     flex-direction: column;
 }
@@ -285,8 +287,8 @@ footer a {
 }
 
 .img-fluid {
-    min-width: 300px;
     max-width: 100%;
+    height: auto;
     max-height: 500px;
     object-fit: cover;
 }
