@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import slugify
 from cloudinary.models import CloudinaryField
 
 class Project(models.Model):
@@ -59,3 +60,38 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class BlogPost(models.Model):
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=200, unique=True)
+    content = models.TextField()  # Rich text via Summernote
+    image = CloudinaryField('blog/', blank=True, null=True)  # Optional hero image
+    video_url = models.URLField(blank=True, null=True)  # Optional YouTube URL
+    projects = models.ManyToManyField(
+        Project, blank=True, related_name='blog_posts'
+    )  # Tag zero or more projects
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_on']
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.title
+
+
+class BlogImage(models.Model):
+    blog_post = models.ForeignKey(
+        BlogPost, on_delete=models.CASCADE, related_name='images'
+    )
+    image = CloudinaryField('blog/')
+    caption = models.CharField(max_length=255, blank=True)
+
+    def __str__(self):
+        return self.caption or f"Image for {self.blog_post.title}"

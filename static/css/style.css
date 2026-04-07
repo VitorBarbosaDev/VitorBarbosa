@@ -410,3 +410,75 @@ a[href$=".gif"] {
 .card .card-body .btn {
     margin-bottom: 0.75rem;
 }
+
+/* ---- Blog ---- */
+.blog-date {
+    color: #aaa;
+}
+
+.blog-badge {
+    background-color: #4caf50;
+    color: #fff;
+    font-size: 0.75rem;
+    padding: 0.3em 0.6em;
+    border-radius: 0.25rem;
+}
+
+.blog-badge:hover {
+    background-color: #45a049;
+    color: #fff;
+}
+
+.blog-badge-muted {
+    background-color: #555;
+    color: #ccc;
+    font-size: 0.75rem;
+    padding: 0.3em 0.6em;
+    border-radius: 0.25rem;
+}
+
+.blog-content img {
+    max-width: 100%;
+    height: auto;
+}
+
+.blog-screenshot {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.blog-screenshot:hover {
+    transform: scale(1.05);
+}
+
+.btn-outline-primary {
+    color: #4caf50;
+    border-color: #4caf50;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary.active,
+.btn-outline-primary:active {
+    background-color: #4caf50;
+    border-color: #4caf50;
+    color: #fff;
+}
+
+.page-link {
+    background-color: #2a2a2a;
+    border-color: #444;
+    color: #4caf50;
+}
+
+.page-link:hover {
+    background-color: #4caf50;
+    border-color: #4caf50;
+    color: #fff;
+}
+
+.page-item.active .page-link {
+    background-color: #4caf50;
+    border-color: #4caf50;
+    color: #fff;
+}
+

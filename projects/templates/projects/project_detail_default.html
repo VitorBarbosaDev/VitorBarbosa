@@ -10,7 +10,7 @@
     <div class="trailer mb-3">
         <h5>Watch Trailer</h5>
         <div class="embed-responsive embed-responsive-16by9 custom-video-container">
-            <iframe class="embed-responsive-item custom-video-iframe" src="{{ project.trailer_url|youtube_embed }}" allowfullscreen></iframe>
+            <iframe class="embed-responsive-item custom-video-iframe" src="{{ project.trailer_url|youtube_embed }}" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
         </div>
     </div>
     {% endif %}
@@ -49,10 +49,25 @@
     {% if project.external_link %}
     <a href="{{ project.external_link }}" class="btn btn-info">{{ project.external_label }}</a>
     {% endif %}
+
+    {% if blog_posts %}
+    <hr>
+    <h5>Blog Posts About This Project</h5>
+    <ul class="list-unstyled">
+        {% for post in blog_posts %}
+        <li class="mb-2">
+            <a href="{% url 'blog_detail' post.slug %}" class="text-decoration-none" style="color: #4caf50;">
+                {{ post.title }}
+            </a>
+            <small class="blog-date ms-2">{{ post.created_on|date:"M d, Y" }}</small>
+        </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'blog_list' %}?project={{ project.pk }}" class="btn btn-outline-primary btn-sm">View all blog posts →</a>
+    {% endif %}
 </div>
 
 {% if project.additional_images.all %}
-<!-- Modal -->
 <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">

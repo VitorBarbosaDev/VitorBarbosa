@@ -13,7 +13,47 @@ def truncate_words(value, word_limit):
 
 @register.filter
 def youtube_embed(url):
-    return url.replace('watch?v=', 'embed/')
+    """
+    Extract the YouTube video ID from any common URL format and return
+    a clean embed URL.  Handles:
+      - https://www.youtube.com/watch?v=VIDEO_ID&si=...
+      - https://youtu.be/VIDEO_ID?si=...
+      - https://www.youtube.com/embed/VIDEO_ID
+      - https://youtube.com/shorts/VIDEO_ID
+    """
+    if not url:
+        return url
+
+    video_id = None
+
+    # youtube.com/watch?v=VIDEO_ID
+    match = re.search(r'(?:youtube\.com/watch\?.*v=)([\w-]+)', url)
+    if match:
+        video_id = match.group(1)
+
+    # youtu.be/VIDEO_ID
+    if not video_id:
+        match = re.search(r'youtu\.be/([\w-]+)', url)
+        if match:
+            video_id = match.group(1)
+
+    # youtube.com/embed/VIDEO_ID (already an embed link)
+    if not video_id:
+        match = re.search(r'youtube\.com/embed/([\w-]+)', url)
+        if match:
+            video_id = match.group(1)
+
+    # youtube.com/shorts/VIDEO_ID
+    if not video_id:
+        match = re.search(r'youtube\.com/shorts/([\w-]+)', url)
+        if match:
+            video_id = match.group(1)
+
+    if video_id:
+        return f'https://www.youtube.com/embed/{video_id}'
+
+    # Fallback: return original URL unchanged
+    return url
 
 
 @register.filter(name='embed_gifs')

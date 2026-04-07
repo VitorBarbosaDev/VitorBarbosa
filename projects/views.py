@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Project, Profile, CV
+from django.core.paginator import Paginator
+from .models import Project, Profile, CV, BlogPost
 
 def home(request):
     profile = Profile.objects.first()
@@ -22,5 +23,39 @@ def games(request):
 
 def project_detail(request, pk):
     project = get_object_or_404(Project, pk=pk)
+    blog_posts = BlogPost.objects.filter(projects=project)
     template = f"projects/project_detail_{project.template}.html"
-    return render(request, template, {'project': project})
+    return render(request, template, {'project': project, 'blog_posts': blog_posts})
+
+
+def blog_list(request):
+    posts = BlogPost.objects.all()
+    active_project = None
+    project_pk = request.GET.get('project')
+    if project_pk:
+        active_project = get_object_or_404(Project, pk=project_pk)
+        posts = posts.filter(projects=active_project)
+
+    # Show untagged posts only
+    show_untagged = request.GET.get('untagged')
+    if show_untagged:
+        posts = posts.filter(projects__isnull=True)
+
+    paginator = Paginator(posts, 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # Projects that have at least one blog post (for filter dropdown)
+    tagged_projects = Project.objects.filter(blog_posts__isnull=False).distinct()
+
+    return render(request, 'projects/blog_list.html', {
+        'page_obj': page_obj,
+        'active_project': active_project,
+        'tagged_projects': tagged_projects,
+        'show_untagged': show_untagged,
+    })
+
+
+def blog_detail(request, slug):
+    post = get_object_or_404(BlogPost, slug=slug)
+    return render(request, 'projects/blog_detail.html', {'post': post})

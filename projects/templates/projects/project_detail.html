@@ -19,5 +19,21 @@
     <a href="{{ project.external_link }}" class="btn btn-info">{{ project.external_label }}</a>
     {% endif %}
 
+    {% if blog_posts %}
+    <hr>
+    <h5>Blog Posts About This Project</h5>
+    <ul class="list-unstyled">
+        {% for post in blog_posts %}
+        <li class="mb-2">
+            <a href="{% url 'blog_detail' post.slug %}" class="text-decoration-none" style="color: #4caf50;">
+                {{ post.title }}
+            </a>
+            <small class="blog-date ms-2">{{ post.created_on|date:"M d, Y" }}</small>
+        </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'blog_list' %}?project={{ project.pk }}" class="btn btn-outline-primary btn-sm">View all blog posts →</a>
+    {% endif %}
+
 </div>
 {% endblock content %}

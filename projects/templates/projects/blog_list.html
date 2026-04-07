@@ -1,0 +1,85 @@
+{% extends "projects/base.html" %}
+{% load custom_filters %}
+
+{% block content %}
+<div class="container">
+    <h1>
+        {% if active_project %}
+            Blog — {{ active_project.title }}
+        {% elif show_untagged %}
+            Blog — Side Projects
+        {% else %}
+            Blog
+        {% endif %}
+    </h1>
+
+    <!-- Filter bar -->
+    <div class="mb-4">
+        <a href="{% url 'blog_list' %}" class="btn btn-sm {% if not active_project and not show_untagged %}btn-primary{% else %}btn-outline-primary{% endif %} me-1 mb-1">All</a>
+        {% for proj in tagged_projects %}
+        <a href="{% url 'blog_list' %}?project={{ proj.pk }}"
+           class="btn btn-sm {% if active_project.pk == proj.pk %}btn-primary{% else %}btn-outline-primary{% endif %} me-1 mb-1">
+            {{ proj.title }}
+        </a>
+        {% endfor %}
+        <a href="{% url 'blog_list' %}?untagged=1"
+           class="btn btn-sm {% if show_untagged %}btn-primary{% else %}btn-outline-primary{% endif %} me-1 mb-1">
+            Side Projects
+        </a>
+    </div>
+
+    {% if page_obj %}
+    <div class="row">
+        {% for post in page_obj %}
+        <div class="col-md-6 col-lg-4 pb-4">
+            <div class="card h-100">
+                {% if post.image %}
+                <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}">
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="blog-date"><small>{{ post.created_on|date:"M d, Y" }}</small></p>
+                    <div class="card-text">{{ post.content|truncatewords_html:30|safe }}</div>
+                    <div class="mt-2 mb-2">
+                        {% for proj in post.projects.all %}
+                        <a href="{% url 'blog_list' %}?project={{ proj.pk }}" class="badge blog-badge text-decoration-none">{{ proj.title }}</a>
+                        {% empty %}
+                        <span class="badge blog-badge-muted">Side Project</span>
+                        {% endfor %}
+                    </div>
+                    <a href="{% url 'blog_detail' post.slug %}" class="btn btn-primary mt-auto">Read More</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <nav aria-label="Blog pagination">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?{% if active_project %}project={{ active_project.pk }}&{% endif %}{% if show_untagged %}untagged=1&{% endif %}page={{ page_obj.previous_page_number }}">Previous</a>
+            </li>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                <a class="page-link" href="?{% if active_project %}project={{ active_project.pk }}&{% endif %}{% if show_untagged %}untagged=1&{% endif %}page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?{% if active_project %}project={{ active_project.pk }}&{% endif %}{% if show_untagged %}untagged=1&{% endif %}page={{ page_obj.next_page_number }}">Next</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <p>No blog posts yet — check back soon!</p>
+    {% endif %}
+</div>
+{% endblock content %}
+

@@ -1,0 +1,97 @@
+{% extends "projects/base.html" %}
+{% load custom_filters %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ post.title }}</h1>
+    <p class="blog-date">{{ post.created_on|date:"F d, Y" }}{% if post.updated_on != post.created_on %} · Updated {{ post.updated_on|date:"F d, Y" }}{% endif %}</p>
+
+    <!-- Tagged projects -->
+    {% if post.projects.all %}
+    <div class="mb-3">
+        {% for proj in post.projects.all %}
+        <a href="{% url 'project_detail' proj.pk %}" class="badge blog-badge text-decoration-none">{{ proj.title }}</a>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Hero image -->
+    {% if post.image %}
+    <img src="{{ post.image.url }}" class="img-fluid mb-4" alt="{{ post.title }}">
+    {% endif %}
+
+    <!-- Content (Summernote rich text) -->
+    <div class="blog-content mb-4">
+        {{ post.content|embed_gifs|safe }}
+    </div>
+
+    <!-- Embedded video -->
+    {% if post.video_url %}
+    <div class="mb-4">
+        <h5>Watch Video</h5>
+        <div class="embed-responsive embed-responsive-16by9 custom-video-container">
+            <iframe class="embed-responsive-item custom-video-iframe" src="{{ post.video_url|youtube_embed }}" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Additional images -->
+    {% if post.images.all %}
+    <h5 class="mt-4">Screenshots</h5>
+    <div class="row">
+        {% for img in post.images.all %}
+        <div class="col-md-4 mb-3">
+            <img src="{{ img.image.url }}" class="img-fluid blog-screenshot" alt="{{ img.caption }}" data-bs-toggle="modal" data-bs-target="#blogImageModal" data-img-src="{{ img.image.url }}" data-img-caption="{{ img.caption }}">
+            {% if img.caption %}
+            <p class="text-center mt-1"><small>{{ img.caption }}</small></p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Image modal -->
+    <div class="modal fade" id="blogImageModal" tabindex="-1" aria-labelledby="blogImageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="blogImageModalLabel">Image</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <img src="" class="img-fluid" id="blogModalImg" alt="">
+                    <p class="mt-2" id="blogModalCaption"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Related project links -->
+    {% if post.projects.all %}
+    <hr>
+    <h5>Related Projects</h5>
+    <div class="mb-3">
+        {% for proj in post.projects.all %}
+        <a href="{% url 'project_detail' proj.pk %}" class="btn btn-outline-primary me-1 mb-1">{{ proj.title }}</a>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <a href="{% url 'blog_list' %}" class="btn btn-secondary mt-3">← Back to Blog</a>
+</div>
+{% endblock content %}
+
+{% block extra_scripts %}
+<script>
+    $(document).ready(function() {
+        $('.blog-screenshot').on('click', function() {
+            var src = $(this).data('img-src');
+            var caption = $(this).data('img-caption');
+            $('#blogModalImg').attr('src', src);
+            $('#blogModalCaption').text(caption);
+            $('#blogImageModalLabel').text(caption || 'Image');
+        });
+    });
+</script>
+{% endblock extra_scripts %}
+

@@ -8,7 +8,7 @@ Django 4.2 portfolio site for a developer (Vitor Barbosa) showcasing Full Stack 
 
 - **Single Django app (`projects/`)** — contains all models, views, admin, templates, and custom template tags.
 - **`portfolio/`** — Django project config (settings, root URL conf, WSGI).
-- **Models**: `Project` (portfolio entries with category/template selectors), `ProjectImage` (M2M gallery images), `Profile` (singleton site owner info), `CV` (singleton resume file).
+- **Models**: `Project` (portfolio entries with category/template selectors), `ProjectImage` (M2M gallery images), `Profile` (singleton site owner info), `CV` (singleton resume file), `BlogPost` (blog entries optionally tagged to projects), `BlogImage` (multiple images per blog post).
 - **Views are all function-based**, each rendering a specific template. No class-based views, no REST API.
 - **Project detail uses dynamic template selection**: `project_detail_{project.template}.html` — templates are `default`, `gallery`, `feature` (see `TEMPLATE_CHOICES` in `projects/models.py` and corresponding files in `projects/templates/projects/`).
 
@@ -55,6 +55,14 @@ python manage.py test
 1. Add choice to `TEMPLATE_CHOICES` in `projects/models.py`.
 2. Create `projects/templates/projects/project_detail_{name}.html` extending `base.html`.
 3. The view (`project_detail`) will automatically resolve it — no view changes needed.
+
+## Blog Feature
+
+- **`BlogPost`** can be tagged to zero or more `Project` entries via M2M. Untagged posts represent "side projects."
+- Blog list (`/blog/`) supports filtering: `?project=<pk>` for a specific project, `?untagged=1` for side projects only. Paginated (6 per page).
+- Blog detail (`/blog/<slug>/`) renders Summernote rich text, embedded YouTube videos (`youtube_embed` filter), Giphy GIFs (`embed_gifs` filter), and a clickable screenshot gallery via `BlogImage`.
+- **Project detail pages** automatically show a "Blog Posts About This Project" section when tagged posts exist — no extra config needed.
+- Admin uses `SummernoteModelAdmin` for rich text, `filter_horizontal` for project tagging, `prepopulated_fields` for slug, and `BlogImageInline` for screenshots.
 
 ## File Reference
 

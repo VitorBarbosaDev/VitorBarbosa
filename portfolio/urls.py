@@ -26,4 +26,6 @@ urlpatterns = [
     path('full-stack/', views.full_stack, name='full_stack'),
     path('games/', views.games, name='games'),
     path('project/<int:pk>/', views.project_detail, name='project_detail'),
+    path('blog/', views.blog_list, name='blog_list'),
+    path('blog/<slug:slug>/', views.blog_detail, name='blog_detail'),
 ]
