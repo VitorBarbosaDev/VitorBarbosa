@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.utils.text import slugify
 from cloudinary.models import CloudinaryField
@@ -73,6 +75,7 @@ class BlogPost(models.Model):
     )  # Tag zero or more projects
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
+    notified = models.BooleanField(default=False)  # True after subscribers are notified
 
     class Meta:
         ordering = ['-created_on']
@@ -95,3 +98,23 @@ class BlogImage(models.Model):
 
     def __str__(self):
         return self.caption or f"Image for {self.blog_post.title}"
+
+
+class Subscriber(models.Model):
+    """Email subscriber for blog post notifications."""
+    email = models.EmailField(unique=True)
+    token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    subscribe_all = models.BooleanField(
+        default=True,
+        help_text='Receive notifications for every new blog post.',
+    )
+    projects = models.ManyToManyField(
+        Project, blank=True, related_name='subscribers',
+        help_text='If not subscribed to all, only these projects trigger emails.',
+    )
+    is_active = models.BooleanField(default=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email
+

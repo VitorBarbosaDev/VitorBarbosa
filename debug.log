@@ -2760,3 +2760,88 @@ Not Found: /favicon.ico
 Not Found: /favicon.ico
 Not Found: /favicon.ico
 Not Found: /favicon.ico
+Not Found: /favicon.ico
+STREAM b'IHDR' 16 13
+STREAM b'sRGB' 41 1
+STREAM b'gAMA' 54 4
+STREAM b'pHYs' 70 9
+STREAM b'IDAT' 91 65445
+Importing AvifImagePlugin
+Importing BlpImagePlugin
+Importing BmpImagePlugin
+Importing BufrStubImagePlugin
+Importing CurImagePlugin
+Importing DcxImagePlugin
+Importing DdsImagePlugin
+Importing EpsImagePlugin
+Importing FitsImagePlugin
+Importing FliImagePlugin
+Importing FpxImagePlugin
+Image: failed to import FpxImagePlugin: No module named 'olefile'
+Importing FtexImagePlugin
+Importing GbrImagePlugin
+Importing GifImagePlugin
+Importing GribStubImagePlugin
+Importing Hdf5StubImagePlugin
+Importing IcnsImagePlugin
+Importing IcoImagePlugin
+Importing ImImagePlugin
+Importing ImtImagePlugin
+Importing IptcImagePlugin
+Importing JpegImagePlugin
+Importing Jpeg2KImagePlugin
+Importing McIdasImagePlugin
+Importing MicImagePlugin
+Image: failed to import MicImagePlugin: No module named 'olefile'
+Importing MpegImagePlugin
+Importing MpoImagePlugin
+Importing MspImagePlugin
+Importing PalmImagePlugin
+Importing PcdImagePlugin
+Importing PcxImagePlugin
+Importing PdfImagePlugin
+Importing PixarImagePlugin
+Importing PngImagePlugin
+Importing PpmImagePlugin
+Importing PsdImagePlugin
+Importing QoiImagePlugin
+Importing SgiImagePlugin
+Importing SpiderImagePlugin
+Importing SunImagePlugin
+Importing TgaImagePlugin
+Importing TiffImagePlugin
+Importing WebPImagePlugin
+Importing WmfImagePlugin
+Importing XbmImagePlugin
+Importing XpmImagePlugin
+Importing XVThumbImagePlugin
+Starting new HTTPS connection (1): api.cloudinary.com:443
+https://api.cloudinary.com:443 "POST /v1_1/dtbtvoewx/image/upload HTTP/1.1" 200 None
+Starting new HTTPS connection (1): res.cloudinary.com:443
+https://res.cloudinary.com:443 "HEAD /dtbtvoewx/image/upload/v1/django-summernote/2026-04-07/dac671ce-8783-4305-9d13-3892823ec2c7_bmvj7n HTTP/1.1" 200 0
+STREAM b'IHDR' 16 13
+STREAM b'sRGB' 41 1
+STREAM b'gAMA' 54 4
+STREAM b'pHYs' 70 9
+STREAM b'IDAT' 91 65445
+https://api.cloudinary.com:443 "POST /v1_1/dtbtvoewx/image/upload HTTP/1.1" 200 None
+Starting new HTTPS connection (1): res.cloudinary.com:443
+https://res.cloudinary.com:443 "HEAD /dtbtvoewx/image/upload/v1/django-summernote/2026-04-07/8bb6c843-d18a-41aa-bd15-cb1200afd65a_ttbqf1 HTTP/1.1" 200 0
+https://api.cloudinary.com:443 "POST /v1_1/dtbtvoewx/image/upload HTTP/1.1" 200 None
+https://api.cloudinary.com:443 "POST /v1_1/dtbtvoewx/image/upload HTTP/1.1" 200 None
+Watching for file changes with StatReloader
+C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\projects\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\projects\views.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\projects\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\projects\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\env.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\env.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader

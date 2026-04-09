@@ -1,0 +1,96 @@
+{% extends "projects/base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <h1><i class="fas fa-envelope"></i> Subscribe</h1>
+            <p class="text-muted-light">
+                Get an email whenever I publish a new blog post.
+                Choose specific projects or subscribe to everything.
+            </p>
+
+            <form method="post" class="subscribe-form" id="subscribeForm">
+                {% csrf_token %}
+
+                <!-- Email -->
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" class="form-control bg-dark text-light border-secondary"
+                           id="email" name="email" required placeholder="you@example.com">
+                </div>
+
+                <!-- Subscribe to all -->
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="subscribe_all"
+                           name="subscribe_all" checked>
+                    <label class="form-check-label" for="subscribe_all">
+                        Notify me about <strong>all</strong> new blog posts
+                    </label>
+                </div>
+
+                <!-- Per-project selection (shown when "all" is unchecked) -->
+                <div id="projectSelection" class="mb-3" style="display:none;">
+                    <label class="form-label">Or pick specific projects:</label>
+
+                    {% if fullstack_projects %}
+                    <h6 class="mt-3 mb-2 text-accent">
+                        <i class="fas fa-code"></i> Full Stack Projects
+                    </h6>
+                    {% for project in fullstack_projects %}
+                    <div class="form-check ms-2">
+                        <input class="form-check-input" type="checkbox"
+                               name="projects" value="{{ project.pk }}"
+                               id="proj_{{ project.pk }}">
+                        <label class="form-check-label" for="proj_{{ project.pk }}">
+                            {{ project.title }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+
+                    {% if game_projects %}
+                    <h6 class="mt-3 mb-2 text-accent">
+                        <i class="fas fa-gamepad"></i> Game Projects
+                    </h6>
+                    {% for project in game_projects %}
+                    <div class="form-check ms-2">
+                        <input class="form-check-input" type="checkbox"
+                               name="projects" value="{{ project.pk }}"
+                               id="proj_{{ project.pk }}">
+                        <label class="form-check-label" for="proj_{{ project.pk }}">
+                            {{ project.title }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-paper-plane"></i> Subscribe
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block extra_scripts %}
+<script>
+    $(function () {
+        var $all = $('#subscribe_all');
+        var $projects = $('#projectSelection');
+
+        function toggle() {
+            if ($all.is(':checked')) {
+                $projects.slideUp(200);
+            } else {
+                $projects.slideDown(200);
+            }
+        }
+        $all.on('change', toggle);
+        toggle();
+    });
+</script>
+{% endblock extra_scripts %}
+

@@ -8,7 +8,9 @@ Django 4.2 portfolio site for a developer (Vitor Barbosa) showcasing Full Stack 
 
 - **Single Django app (`projects/`)** — contains all models, views, admin, templates, and custom template tags.
 - **`portfolio/`** — Django project config (settings, root URL conf, WSGI).
-- **Models**: `Project` (portfolio entries with category/template selectors), `ProjectImage` (M2M gallery images), `Profile` (singleton site owner info), `CV` (singleton resume file), `BlogPost` (blog entries optionally tagged to projects), `BlogImage` (multiple images per blog post).
+- **Models**: `Project` (portfolio entries with category/template selectors), `ProjectImage` (M2M gallery images), `Profile` (singleton site owner info with `itch_io` URL field), `CV` (singleton resume file), `BlogPost` (blog entries optionally tagged to projects), `BlogImage` (multiple images per blog post).
+- **`Project` link/label fields**: `github_link`, `live_link`, `download_link`, `external_link` (all optional URLFields) plus matching label overrides `github_label`, `live_label`, `download_label`, `external_label` (CharField, max 50, each with a sensible default). Also `trailer_url` (optional YouTube URL for a promo trailer).
+- **`BlogPost` extra fields**: `image` (optional `CloudinaryField` hero image) and `video_url` (optional YouTube URL, passed through `youtube_embed` filter in the template).
 - **Views are all function-based**, each rendering a specific template. No class-based views, no REST API.
 - **Project detail uses dynamic template selection**: `project_detail_{project.template}.html` — templates are `default`, `gallery`, `feature` (see `TEMPLATE_CHOICES` in `projects/models.py` and corresponding files in `projects/templates/projects/`).
 
@@ -16,8 +18,8 @@ Django 4.2 portfolio site for a developer (Vitor Barbosa) showcasing Full Stack 
 
 - **Rich text** via `django-summernote` — `description` (Project) and `bio` (Profile) are HTML fields edited in admin.
 - **Images use `CloudinaryField`**, never `ImageField`. Media storage is `cloudinary_storage.storage.MediaCloudinaryStorage`. Static files use WhiteNoise (`whitenoise.storage.CompressedManifestStaticFilesStorage`).
-- **Custom template filters** live in `projects/templatetags/custom_filters.py`: `truncate_words`, `youtube_embed` (rewrites YouTube watch URLs to embed), `embed_gifs` (converts Giphy URLs to inline `<img>` tags). Load them with `{% load custom_filters %}`.
-- **Bootstrap 5** via CDN (not installed via npm). jQuery 3.5 also loaded from CDN. All custom CSS is in `static/css/style.css`.
+- **Custom template filters** live in `projects/templatetags/custom_filters.py`: `truncate_words`, `youtube_embed` (converts any YouTube URL — `watch?v=`, `youtu.be/`, `/embed/`, `/shorts/` — to a clean embed URL), `embed_gifs` (converts Giphy media URLs to inline `<img>` tags). Load them with `{% load custom_filters %}`.
+- **Bootstrap 5** via CDN (not installed via npm). jQuery 3.5, Font Awesome 5, and Google Fonts (Roboto, Lato) are also loaded from CDN in `base.html`. All custom CSS is in `static/css/style.css`.
 - **Dark theme** — background `#121212`, accent `#4caf50`. Follow this color palette when adding UI.
 - **All templates extend `projects/templates/projects/base.html`**. Use `{% block content %}` for page body and `{% block extra_scripts %}` for page-specific JS.
 
@@ -26,6 +28,7 @@ Django 4.2 portfolio site for a developer (Vitor Barbosa) showcasing Full Stack 
 - **`env.py`** sets local dev environment variables (`DATABASE_URL`, `SECRET_KEY`, `CLOUDINARY_URL`, `EMAIL_HOST_*`, `DEVELOPMENT=True`). It is imported only if the file exists. Never commit real secrets — this file is for local dev.
 - **`DEBUG`** is `True` only when env var `DEVELOPMENT == "True"`. Production enforces SSL, HSTS, secure cookies.
 - **Database**: PostgreSQL via `dj_database_url`. Falls back to SQLite for tests (`if 'test' in sys.argv`).
+- **Supabase RLS**: Row Level Security is enabled on all app tables via `RunPython` migrations (`0008_enable_rls_on_all_tables`, `0010_enable_rls_blog_tables`). When adding new models, create a similar migration that calls `ALTER TABLE public."<table>" ENABLE ROW LEVEL SECURITY;` for each new table — the helper skips execution automatically on SQLite.
 
 ## Developer Workflow
 
@@ -47,7 +50,7 @@ python manage.py collectstatic --noinput
 python manage.py test
 ```
 
-- **Heroku deploy**: `Procfile` runs `gunicorn portfolio.wsgi`. Runtime is `python-3.9.18`.
+- **Heroku deploy**: `Procfile` runs `gunicorn portfolio.wsgi`. Runtime is `python-3.12.9`.
 - **Static files after changes**: run `collectstatic` to update `staticfiles/`.
 
 ## Adding a New Project Detail Template

@@ -1,0 +1,11 @@
+New Blog Post: {{ post.title }}
+{{ post.created_on|date:"F j, Y" }}
+
+{{ post.content|striptags|truncatewords:60 }}
+
+Read the full post: {{ post_url }}
+
+---
+Manage your preferences: {{ manage_url }}
+Unsubscribe: {{ unsubscribe_url }}
+

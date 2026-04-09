@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin:0;padding:0;background-color:#121212;font-family:'Roboto',Arial,sans-serif;color:#e0e0e0;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0"
+           style="background-color:#121212;padding:20px 0;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="600" cellspacing="0" cellpadding="0"
+                       style="background-color:#1a1a1a;border-radius:8px;overflow:hidden;">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background-color:#4caf50;padding:20px 30px;">
+                            <h1 style="margin:0;font-size:22px;color:#fff;font-family:'Lato',Arial,sans-serif;">
+                                New Blog Post
+                            </h1>
+                        </td>
+                    </tr>
+                    <!-- Body -->
+                    <tr>
+                        <td style="padding:30px;">
+                            <h2 style="margin:0 0 10px;color:#4caf50;font-family:'Lato',Arial,sans-serif;">
+                                {{ post.title }}
+                            </h2>
+                            <p style="color:#aaa;font-size:13px;margin:0 0 20px;">
+                                {{ post.created_on|date:"F j, Y" }}
+                            </p>
+
+                            {% if post.image %}
+                            <img src="{{ post.image.url }}" alt="{{ post.title }}"
+                                 style="max-width:100%;height:auto;border-radius:6px;margin-bottom:20px;">
+                            {% endif %}
+
+                            <p style="line-height:1.6;color:#e0e0e0;">
+                                {{ post.content|striptags|truncatewords:60 }}
+                            </p>
+
+                            <table role="presentation" cellspacing="0" cellpadding="0" style="margin:25px 0;">
+                                <tr>
+                                    <td style="background-color:#4caf50;border-radius:5px;padding:12px 24px;">
+                                        <a href="{{ post_url }}"
+                                           style="color:#fff;text-decoration:none;font-weight:bold;font-size:15px;">
+                                            Read Full Post &rarr;
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- Footer -->
+                    <tr>
+                        <td style="padding:20px 30px;background-color:#121212;border-top:1px solid #333;font-size:12px;color:#888;">
+                            <p style="margin:0 0 8px;">
+                                You received this email because you subscribed to blog notifications on
+                                <strong>Vitor's Portfolio</strong>.
+                            </p>
+                            <p style="margin:0;">
+                                <a href="{{ manage_url }}" style="color:#4caf50;text-decoration:underline;">
+                                    Manage preferences
+                                </a>
+                                &nbsp;|&nbsp;
+                                <a href="{{ unsubscribe_url }}" style="color:#999;text-decoration:underline;">
+                                    Unsubscribe
+                                </a>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+

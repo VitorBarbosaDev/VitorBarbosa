@@ -78,6 +78,18 @@
     {% endif %}
 
     <a href="{% url 'blog_list' %}" class="btn btn-secondary mt-3">← Back to Blog</a>
+
+    <!-- Subscribe CTA -->
+    <div class="subscribe-cta text-center mt-5 mb-4 p-4">
+        <h5 class="text-accent"><i class="fas fa-envelope"></i> Enjoyed this post?</h5>
+        <p class="text-muted-light mb-3">
+            Subscribe to get notified when I publish new blog posts —
+            follow all updates or just the projects you care about.
+        </p>
+        <a href="{% url 'subscribe' %}" class="btn btn-primary">
+            <i class="fas fa-paper-plane"></i> Subscribe
+        </a>
+    </div>
 </div>
 {% endblock content %}
 

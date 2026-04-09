@@ -1,6 +1,9 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
-from .models import Project, Profile, CV, BlogPost
+from django.contrib import messages
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+from .models import Project, Profile, CV, BlogPost, Subscriber
 
 def home(request):
     profile = Profile.objects.first()
@@ -59,3 +62,95 @@ def blog_list(request):
 def blog_detail(request, slug):
     post = get_object_or_404(BlogPost, slug=slug)
     return render(request, 'projects/blog_detail.html', {'post': post})
+
+
+def subscribe(request):
+    all_projects = Project.objects.all()
+    fullstack_projects = all_projects.filter(category='Full Stack')
+    game_projects = all_projects.filter(category='Games')
+
+    if request.method == 'POST':
+        email = request.POST.get('email', '').strip()
+        subscribe_all = request.POST.get('subscribe_all') == 'on'
+        selected_projects = request.POST.getlist('projects')
+
+        # Validate email
+        try:
+            validate_email(email)
+        except ValidationError:
+            messages.error(request, 'Please enter a valid email address.')
+            return render(request, 'projects/subscribe.html', {
+                'fullstack_projects': fullstack_projects,
+                'game_projects': game_projects,
+            })
+
+        # Create or update subscriber
+        subscriber, created = Subscriber.objects.get_or_create(
+            email=email,
+            defaults={'subscribe_all': subscribe_all, 'is_active': True},
+        )
+        if not created:
+            # Re-activate if previously unsubscribed
+            subscriber.is_active = True
+            subscriber.subscribe_all = subscribe_all
+            subscriber.save()
+
+        # Set project subscriptions
+        if not subscribe_all and selected_projects:
+            subscriber.projects.set(selected_projects)
+        else:
+            subscriber.projects.clear()
+
+        if created:
+            messages.success(
+                request,
+                'You have been subscribed! You will receive email '
+                'notifications for new blog posts.',
+            )
+        else:
+            messages.success(
+                request, 'Your subscription preferences have been updated!',
+            )
+        return redirect('subscribe')
+
+    return render(request, 'projects/subscribe.html', {
+        'fullstack_projects': fullstack_projects,
+        'game_projects': game_projects,
+    })
+
+
+def unsubscribe(request, token):
+    subscriber = get_object_or_404(Subscriber, token=token)
+    subscriber.is_active = False
+    subscriber.save()
+    return render(request, 'projects/unsubscribe_confirm.html')
+
+
+def manage_subscription(request, token):
+    subscriber = get_object_or_404(Subscriber, token=token)
+    all_projects = Project.objects.all()
+    fullstack_projects = all_projects.filter(category='Full Stack')
+    game_projects = all_projects.filter(category='Games')
+
+    if request.method == 'POST':
+        subscribe_all = request.POST.get('subscribe_all') == 'on'
+        selected_projects = request.POST.getlist('projects')
+
+        subscriber.subscribe_all = subscribe_all
+        subscriber.is_active = True
+        subscriber.save()
+
+        if not subscribe_all and selected_projects:
+            subscriber.projects.set(selected_projects)
+        else:
+            subscriber.projects.clear()
+
+        messages.success(request, 'Your subscription preferences have been updated!')
+        return redirect('manage_subscription', token=subscriber.token)
+
+    return render(request, 'projects/manage_subscription.html', {
+        'subscriber': subscriber,
+        'fullstack_projects': fullstack_projects,
+        'game_projects': game_projects,
+    })
+

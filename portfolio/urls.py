@@ -28,4 +28,15 @@ urlpatterns = [
     path('project/<int:pk>/', views.project_detail, name='project_detail'),
     path('blog/', views.blog_list, name='blog_list'),
     path('blog/<slug:slug>/', views.blog_detail, name='blog_detail'),
+    path('subscribe/', views.subscribe, name='subscribe'),
+    path(
+        'unsubscribe/<uuid:token>/',
+        views.unsubscribe,
+        name='unsubscribe',
+    ),
+    path(
+        'subscription/<uuid:token>/',
+        views.manage_subscription,
+        name='manage_subscription',
+    ),
 ]
