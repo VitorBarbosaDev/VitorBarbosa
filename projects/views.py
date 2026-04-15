@@ -3,6 +3,7 @@ from django.core.paginator import Paginator
 from django.contrib import messages
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+from django.db.models import F
 from .models import Project, Profile, CV, BlogPost, Subscriber
 
 def home(request):
@@ -26,13 +27,13 @@ def games(request):
 
 def project_detail(request, pk):
     project = get_object_or_404(Project, pk=pk)
-    blog_posts = BlogPost.objects.filter(projects=project)
+    blog_posts = BlogPost.objects.filter(projects=project, is_live=True)
     template = f"projects/project_detail_{project.template}.html"
     return render(request, template, {'project': project, 'blog_posts': blog_posts})
 
 
 def blog_list(request):
-    posts = BlogPost.objects.all()
+    posts = BlogPost.objects.filter(is_live=True)
     active_project = None
     project_pk = request.GET.get('project')
     if project_pk:
@@ -60,7 +61,10 @@ def blog_list(request):
 
 
 def blog_detail(request, slug):
-    post = get_object_or_404(BlogPost, slug=slug)
+    post = get_object_or_404(BlogPost, slug=slug, is_live=True)
+    # Increment view count atomically
+    BlogPost.objects.filter(pk=post.pk).update(views=F('views') + 1)
+    post.refresh_from_db(fields=['views'])
     return render(request, 'projects/blog_detail.html', {'post': post})
 
 

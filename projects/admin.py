@@ -42,14 +42,30 @@ class BlogImageInline(admin.TabularInline):
 
 class BlogPostAdmin(SummernoteModelAdmin):
     summernote_fields = ('content',)
-    list_display = ('title', 'created_on', 'updated_on', 'notified')
-    list_filter = ('created_on', 'projects', 'notified')
+    list_display = ('title', 'is_live', 'views', 'created_on', 'updated_on', 'notified')
+    list_filter = ('is_live', 'created_on', 'projects', 'notified')
     search_fields = ('title', 'content')
     prepopulated_fields = {'slug': ('title',)}
     filter_horizontal = ('projects',)
-    readonly_fields = ('notified',)
+    readonly_fields = ('notified', 'views')
     inlines = [BlogImageInline]
-    actions = ['send_notifications']
+    actions = ['go_live', 'take_offline', 'send_notifications']
+
+    @admin.action(description='Go live — publish selected posts')
+    def go_live(self, request, queryset):
+        updated = queryset.filter(is_live=False).update(is_live=True)
+        self.message_user(
+            request,
+            f'{updated} post(s) are now live.',
+        )
+
+    @admin.action(description='Take offline — unpublish selected posts')
+    def take_offline(self, request, queryset):
+        updated = queryset.filter(is_live=True).update(is_live=False)
+        self.message_user(
+            request,
+            f'{updated} post(s) taken offline.',
+        )
 
     @admin.action(description='Send email notifications to subscribers')
     def send_notifications(self, request, queryset):

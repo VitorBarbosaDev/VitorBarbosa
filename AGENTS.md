@@ -8,9 +8,9 @@ Django 4.2 portfolio site for a developer (Vitor Barbosa) showcasing Full Stack 
 
 - **Single Django app (`projects/`)** — contains all models, views, admin, templates, and custom template tags.
 - **`portfolio/`** — Django project config (settings, root URL conf, WSGI).
-- **Models**: `Project` (portfolio entries with category/template selectors), `ProjectImage` (M2M gallery images), `Profile` (singleton site owner info with `itch_io` URL field), `CV` (singleton resume file), `BlogPost` (blog entries optionally tagged to projects), `BlogImage` (multiple images per blog post).
+- **Models**: `Project` (portfolio entries with category/template selectors), `ProjectImage` (M2M gallery images), `Profile` (singleton site owner info with `itch_io` URL field), `CV` (singleton resume file), `BlogPost` (blog entries optionally tagged to projects, with draft/live workflow and view tracking), `BlogImage` (multiple images per blog post), `Subscriber` (email subscribers for blog notifications).
 - **`Project` link/label fields**: `github_link`, `live_link`, `download_link`, `external_link` (all optional URLFields) plus matching label overrides `github_label`, `live_label`, `download_label`, `external_label` (CharField, max 50, each with a sensible default). Also `trailer_url` (optional YouTube URL for a promo trailer).
-- **`BlogPost` extra fields**: `image` (optional `CloudinaryField` hero image) and `video_url` (optional YouTube URL, passed through `youtube_embed` filter in the template).
+- **`BlogPost` extra fields**: `image` (optional `CloudinaryField` hero image), `video_url` (optional YouTube URL, passed through `youtube_embed` filter in the template), `is_live` (boolean, default `False` — only live posts are visible on the site), `views` (auto-incremented page-view counter, non-editable).
 - **Views are all function-based**, each rendering a specific template. No class-based views, no REST API.
 - **Project detail uses dynamic template selection**: `project_detail_{project.template}.html` — templates are `default`, `gallery`, `feature` (see `TEMPLATE_CHOICES` in `projects/models.py` and corresponding files in `projects/templates/projects/`).
 
@@ -62,10 +62,12 @@ python manage.py test
 ## Blog Feature
 
 - **`BlogPost`** can be tagged to zero or more `Project` entries via M2M. Untagged posts represent "side projects."
+- **Draft/live workflow**: posts default to `is_live=False` (draft). Use the **"Go live"** admin action to publish, or **"Take offline"** to revert. All public queries (`blog_list`, `blog_detail`, `project_detail`) filter on `is_live=True`.
+- **View tracking**: `blog_detail` increments `views` atomically via `F()` expression on each page load. The count is displayed in the detail template and visible as a read-only field in admin.
 - Blog list (`/blog/`) supports filtering: `?project=<pk>` for a specific project, `?untagged=1` for side projects only. Paginated (6 per page).
 - Blog detail (`/blog/<slug>/`) renders Summernote rich text, embedded YouTube videos (`youtube_embed` filter), Giphy GIFs (`embed_gifs` filter), and a clickable screenshot gallery via `BlogImage`.
-- **Project detail pages** automatically show a "Blog Posts About This Project" section when tagged posts exist — no extra config needed.
-- Admin uses `SummernoteModelAdmin` for rich text, `filter_horizontal` for project tagging, `prepopulated_fields` for slug, and `BlogImageInline` for screenshots.
+- **Project detail pages** automatically show a "Blog Posts About This Project" section when tagged **live** posts exist — no extra config needed.
+- Admin uses `SummernoteModelAdmin` for rich text, `filter_horizontal` for project tagging, `prepopulated_fields` for slug, and `BlogImageInline` for screenshots. Admin actions: **Go live**, **Take offline**, **Send email notifications**.
 
 ## File Reference
 

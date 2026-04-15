@@ -76,6 +76,11 @@ class BlogPost(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     notified = models.BooleanField(default=False)  # True after subscribers are notified
+    is_live = models.BooleanField(
+        default=False,
+        help_text='Only live posts are visible on the site.',
+    )
+    views = models.PositiveIntegerField(default=0, editable=False)
 
     class Meta:
         ordering = ['-created_on']

@@ -4,7 +4,7 @@
 {% block content %}
 <div class="container">
     <h1>{{ post.title }}</h1>
-    <p class="blog-date">{{ post.created_on|date:"F d, Y" }}{% if post.updated_on != post.created_on %} · Updated {{ post.updated_on|date:"F d, Y" }}{% endif %}</p>
+    <p class="blog-date">{{ post.created_on|date:"F d, Y" }}{% if post.updated_on != post.created_on %} · Updated {{ post.updated_on|date:"F d, Y" }}{% endif %} · <i class="fas fa-eye"></i> {{ post.views }} view{{ post.views|pluralize }}</p>
 
     <!-- Tagged projects -->
     {% if post.projects.all %}
