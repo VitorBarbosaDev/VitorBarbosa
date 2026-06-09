@@ -20,6 +20,8 @@ Django 4.2 portfolio site for a developer (Vitor Barbosa) showcasing Full Stack 
 - **Images use `CloudinaryField`**, never `ImageField`. Media storage is `cloudinary_storage.storage.MediaCloudinaryStorage`. Static files use WhiteNoise (`whitenoise.storage.CompressedManifestStaticFilesStorage`).
 - **Custom template filters** live in `projects/templatetags/custom_filters.py`: `truncate_words`, `youtube_embed` (converts any YouTube URL — `watch?v=`, `youtu.be/`, `/embed/`, `/shorts/` — to a clean embed URL), `embed_gifs` (converts Giphy media URLs to inline `<img>` tags). Load them with `{% load custom_filters %}`.
 - **Bootstrap 5** via CDN (not installed via npm). jQuery 3.5, Font Awesome 5, and Google Fonts (Roboto, Lato) are also loaded from CDN in `base.html`. All custom CSS is in `static/css/style.css`.
+- **Custom Admin CSS** in `static/projects/css/admin_custom.css` handles mobile responsiveness for Summernote editors in the Django admin.
+- **Summernote Configuration** in `portfolio/settings.py` defines the editor toolbar (including font size, color, history, and advanced formatting) and ensures full-width display via custom CSS.
 - **Dark theme** — background `#121212`, accent `#4caf50`. Follow this color palette when adding UI.
 - **All templates extend `projects/templates/projects/base.html`**. Use `{% block content %}` for page body and `{% block extra_scripts %}` for page-specific JS.
 

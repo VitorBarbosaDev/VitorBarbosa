@@ -21,6 +21,11 @@ class ProjectAdmin(SummernoteModelAdmin):
     ordering = ('category', 'title')
     inlines = [ProjectImageInline]
 
+    class Media:
+        css = {
+            'all': ('projects/css/admin_custom.css',),
+        }
+
 class CVAdmin(admin.ModelAdmin):
     list_display = ('resume',)
 
@@ -28,6 +33,11 @@ class ProfileAdmin(SummernoteModelAdmin):
     summernote_fields = ('bio',)
     list_display = ('name', 'title', 'email', 'phone')
     search_fields = ('name', 'email', 'title')
+
+    class Media:
+        css = {
+            'all': ('projects/css/admin_custom.css',),
+        }
 
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(CV, CVAdmin)
@@ -50,6 +60,11 @@ class BlogPostAdmin(SummernoteModelAdmin):
     readonly_fields = ('notified', 'views')
     inlines = [BlogImageInline]
     actions = ['go_live', 'take_offline', 'send_notifications']
+
+    class Media:
+        css = {
+            'all': ('projects/css/admin_custom.css',),
+        }
 
     @admin.action(description='Go live — publish selected posts')
     def go_live(self, request, queryset):
