@@ -147,7 +147,7 @@ SUMMERNOTE_CONFIG = {
         'width': '100%',
         'toolbar': [
             ['style', ['style']],
-            ['font', ['bold', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
+            ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
             ['fontname', ['fontname']],
             ['fontsize', ['fontsize']],
             ['color', ['color']],
