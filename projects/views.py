@@ -45,6 +45,14 @@ def blog_list(request):
     if show_untagged:
         posts = posts.filter(projects__isnull=True)
 
+    # Sorting
+    sort = request.GET.get('sort')
+    if sort == 'views':
+        posts = posts.order_by('-views', '-created_on')
+    else:
+        # Default is already -created_on in Meta, but we can be explicit
+        posts = posts.order_by('-created_on')
+
     paginator = Paginator(posts, 6)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -57,6 +65,7 @@ def blog_list(request):
         'active_project': active_project,
         'tagged_projects': tagged_projects,
         'show_untagged': show_untagged,
+        'current_sort': sort,
     })
 
 

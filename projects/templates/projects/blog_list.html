@@ -13,19 +13,34 @@
         {% endif %}
     </h1>
 
-    <!-- Filter bar -->
-    <div class="mb-4">
-        <a href="{% url 'blog_list' %}" class="btn btn-sm {% if not active_project and not show_untagged %}btn-primary{% else %}btn-outline-primary{% endif %} me-1 mb-1">All</a>
-        {% for proj in tagged_projects %}
-        <a href="{% url 'blog_list' %}?project={{ proj.pk }}"
-           class="btn btn-sm {% if active_project.pk == proj.pk %}btn-primary{% else %}btn-outline-primary{% endif %} me-1 mb-1">
-            {{ proj.title }}
-        </a>
-        {% endfor %}
-        <a href="{% url 'blog_list' %}?untagged=1"
-           class="btn btn-sm {% if show_untagged %}btn-primary{% else %}btn-outline-primary{% endif %} me-1 mb-1">
-            Side Projects
-        </a>
+    <!-- Filter and Sort bar -->
+    <div class="mb-4 d-flex flex-wrap justify-content-between align-items-center">
+        <div>
+            <a href="{% url 'blog_list' %}{% if current_sort %}?sort={{ current_sort }}{% endif %}" class="btn btn-sm {% if not active_project and not show_untagged %}btn-primary{% else %}btn-outline-primary{% endif %} me-1 mb-1">All</a>
+            {% for proj in tagged_projects %}
+            <a href="{% url 'blog_list' %}?project={{ proj.pk }}{% if current_sort %}&sort={{ current_sort }}{% endif %}"
+               class="btn btn-sm {% if active_project.pk == proj.pk %}btn-primary{% else %}btn-outline-primary{% endif %} me-1 mb-1">
+                {{ proj.title }}
+            </a>
+            {% endfor %}
+            <a href="{% url 'blog_list' %}?untagged=1{% if current_sort %}&sort={{ current_sort }}{% endif %}"
+               class="btn btn-sm {% if show_untagged %}btn-primary{% else %}btn-outline-primary{% endif %} me-1 mb-1">
+                Side Projects
+            </a>
+        </div>
+        <div class="ms-auto mb-1">
+            <span class="text-muted-light me-2">Sort by:</span>
+            <div class="btn-group" role="group">
+                <a href="?{% if active_project %}project={{ active_project.pk }}&{% endif %}{% if show_untagged %}untagged=1&{% endif %}sort=date" 
+                   class="btn btn-sm {% if current_sort != 'views' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                    Latest
+                </a>
+                <a href="?{% if active_project %}project={{ active_project.pk }}&{% endif %}{% if show_untagged %}untagged=1&{% endif %}sort=views" 
+                   class="btn btn-sm {% if current_sort == 'views' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                    Most Viewed
+                </a>
+            </div>
+        </div>
     </div>
 
     {% if page_obj %}
@@ -38,7 +53,8 @@
                 {% endif %}
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">{{ post.title }}</h5>
-                    <p class="blog-date"><small>{{ post.created_on|date:"M d, Y" }}</small></p>
+                    <p class="blog-date mb-1"><small>{{ post.created_on|date:"M d, Y" }}</small></p>
+                    <p class="blog-views text-muted-light mb-2"><small><i class="fas fa-eye"></i> {{ post.views }} views</small></p>
                     <div class="card-text">{{ post.content|truncatewords_html:30|safe }}</div>
                     <div class="mt-2 mb-2">
                         {% for proj in post.projects.all %}
@@ -60,17 +76,17 @@
         <ul class="pagination justify-content-center">
             {% if page_obj.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?{% if active_project %}project={{ active_project.pk }}&{% endif %}{% if show_untagged %}untagged=1&{% endif %}page={{ page_obj.previous_page_number }}">Previous</a>
+                <a class="page-link" href="?{% if active_project %}project={{ active_project.pk }}&{% endif %}{% if show_untagged %}untagged=1&{% endif %}{% if current_sort %}sort={{ current_sort }}&{% endif %}page={{ page_obj.previous_page_number }}">Previous</a>
             </li>
             {% endif %}
             {% for num in page_obj.paginator.page_range %}
             <li class="page-item {% if page_obj.number == num %}active{% endif %}">
-                <a class="page-link" href="?{% if active_project %}project={{ active_project.pk }}&{% endif %}{% if show_untagged %}untagged=1&{% endif %}page={{ num }}">{{ num }}</a>
+                <a class="page-link" href="?{% if active_project %}project={{ active_project.pk }}&{% endif %}{% if show_untagged %}untagged=1&{% endif %}{% if current_sort %}sort={{ current_sort }}&{% endif %}page={{ num }}">{{ num }}</a>
             </li>
             {% endfor %}
             {% if page_obj.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?{% if active_project %}project={{ active_project.pk }}&{% endif %}{% if show_untagged %}untagged=1&{% endif %}page={{ page_obj.next_page_number }}">Next</a>
+                <a class="page-link" href="?{% if active_project %}project={{ active_project.pk }}&{% endif %}{% if show_untagged %}untagged=1&{% endif %}{% if current_sort %}sort={{ current_sort }}&{% endif %}page={{ page_obj.next_page_number }}">Next</a>
             </li>
             {% endif %}
         </ul>
