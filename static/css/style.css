@@ -437,6 +437,19 @@ a[href$=".gif"] {
     border-radius: 0.25rem;
 }
 
+.blog-card-img {
+    height: 400px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.blog-hero-img {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
 .blog-content img {
     max-width: 100%;
     height: auto;
