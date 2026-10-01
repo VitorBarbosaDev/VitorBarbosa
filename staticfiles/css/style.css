@@ -106,11 +106,10 @@ footer a {
     flex-grow: 1;
 }
 
+/* Base responsive image rule */
 .img-fluid {
     max-width: 100%;
     height: auto;
-    max-height: 500px;
-    object-fit: cover;
 }
 
 .rounded-circle {
@@ -178,186 +177,7 @@ footer a {
     text-decoration: none;
 }
 
-body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #121212;
-    color: #e0e0e0;
-}
-
-.navbar {
-    background-color: #1a1a1a;
-    border-bottom: 2px solid #4caf50;
-}
-
-.navbar-brand {
-    font-family: 'Lato', sans-serif;
-    font-size: 1.5rem;
-    color: #4caf50;
-}
-
-.navbar-nav .nav-link {
-    color: #e0e0e0;
-    font-weight: 700;
-}
-
-.navbar-nav .nav-link.active {
-    color: #4caf50;
-}
-
-.navbar-toggler {
-    border-color: #4caf50;
-}
-
-.navbar-toggler-icon {
-    color: #4caf50;
-}
-
-.main-bg {
-    background-color: #1a1a1a;
-}
-
-.card {
-    margin-bottom: 1.5rem;
-    background-color: #2a2a2a;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    transition: transform 0.2s;
-}
-
-.card:hover {
-    transform: scale(1.05);
-}
-
-.card-title {
-    font-family: 'Lato', sans-serif;
-    color: #4caf50;
-}
-
-.btn-primary {
-    background-color: #4caf50;
-    border-color: #4caf50;
-}
-
-.btn-secondary {
-    background-color: #6c757d;
-    border-color: #6c757d;
-}
-
-footer {
-    background-color: #1a1a1a;
-    padding: 1rem 0;
-}
-
-footer p {
-    margin: 0;
-    color: #e0e0e0;
-}
-
-footer a {
-    color: #4caf50;
-}
-
-.container h1 {
-    margin-top: 2rem;
-    margin-bottom: 1.5rem;
-    font-family: 'Lato', sans-serif;
-    color: #4caf50;
-}
-
-.alert {
-    margin-top: 1rem;
-    background-color: #2a2a2a;
-    border-color: #4caf50;
-    color: #e0e0e0;
-}
-
-.btn-close {
-    background: transparent;
-    border: 0;
-    color: #e0e0e0;
-}
-
-/* Fix invalid selector: target .card with .h-100 utility class */
-.card.h-100 .card-body {
-    display: flex;
-    flex-direction: column;
-}
-
-.card-text {
-    flex-grow: 1;
-}
-
-.img-fluid {
-    max-width: 100%;
-    height: auto;
-    max-height: 500px;
-    object-fit: cover;
-}
-
-.rounded-circle {
-    border-radius: 5% !important;
-}
-
-.download-cv-btn {
-    background-color: #4caf50;
-    border-color: #4caf50;
-    color: #e0e0e0;
-    margin-left: auto;
-}
-
-.download-cv-btn:hover {
-    background-color: #45a049;
-    border-color: #45a049;
-}
-
-.carousel-image {
-    max-height: 500px;
-    object-fit: cover;
-    cursor: pointer;
-}
-
-.modal-content .img-fluid {
-    max-width: 100%;
-    height: auto;
-}
-
-.custom-video-container {
-    position: relative;
-    padding-bottom: 56.25%;
-    height: 0;
-    overflow: hidden;
-    max-width: 100%;
-    background: #000;
-}
-
-.custom-video-iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-@media (min-width: 992px) {
-    .custom-video-container {
-        height: 400px;
-    }
-}
-
-.additional-image {
-    cursor: pointer;
-}
-
-.view-more-images {
-    cursor: pointer;
-    color: #007bff;
-    text-decoration: underline;
-}
-
-.view-more-images:hover {
-    color: #0056b3;
-    text-decoration: none;
-}
-
+/* ---- GIF Styling ---- */
 a[href$=".gif"] {
     display: none;
 }
@@ -384,6 +204,7 @@ a[href$=".gif"] {
     display: block;
     margin-left: auto;
     margin-right: auto;
+    border-radius: 4px;
 }
 
 /* Align GIFs to the left on larger screens and center on smaller screens */
@@ -411,7 +232,49 @@ a[href$=".gif"] {
     margin-bottom: 0.75rem;
 }
 
-/* ---- Blog ---- */
+/* ---- Card Images (Grid & Listing Views) ---- */
+.blog-card-img,
+.project-card-img {
+    height: 400px;
+    object-fit: cover;
+    width: 100%;
+}
+
+/* ---- Hero / Main Featured Images ---- */
+.blog-hero-img,
+.project-hero-img,
+.project-image {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* ---- Summernote Rich Text & Pasted Images (Blog, Project & Bio Content) ---- */
+.blog-content img,
+.project-content img,
+.project-description img,
+.bio-content img,
+.profile-bio img,
+.card-text img {
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 4px;
+}
+
+/* ---- Screenshots / Gallery Thumbnails ---- */
+.blog-screenshot,
+.project-screenshot {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.blog-screenshot:hover,
+.project-screenshot:hover {
+    transform: scale(1.05);
+}
+
+/* ---- Blog Meta & Badges ---- */
 .blog-date {
     color: #aaa;
 }
@@ -435,20 +298,6 @@ a[href$=".gif"] {
     font-size: 0.75rem;
     padding: 0.3em 0.6em;
     border-radius: 0.25rem;
-}
-
-.blog-content img {
-    max-width: 100%;
-    height: auto;
-}
-
-.blog-screenshot {
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.blog-screenshot:hover {
-    transform: scale(1.05);
 }
 
 .btn-outline-primary {
@@ -515,4 +364,3 @@ a[href$=".gif"] {
 .subscribe-cta:hover {
     border-color: #4caf50;
 }
-

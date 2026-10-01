@@ -4,8 +4,10 @@
 {% block content %}
 <div class="container">
     <h1>{{ project.title }}</h1>
-    <img src="{{ project.image.url }}" class="img-fluid" alt="{{ project.title }}" style="min-width: 300px; max-width: 100%; max-height: 500px;">
-    <p>{{ project.description|safe }}</p>
+    <img src="{{ project.image.url }}" class="img-fluid mb-3" alt="{{ project.title }}">
+    <div class="project-content blog-content mb-4">
+        {{ project.description|embed_gifs|safe }}
+    </div>
     {% if project.github_link %}
     <a href="{{ project.github_link }}" class="btn btn-primary">{{ project.github_label }}</a>
     {% endif %}

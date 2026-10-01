@@ -7,7 +7,9 @@
     <div class="row">
         <div class="col-md-8">
             <img src="{{ project.image.url }}" class="img-fluid mb-3" alt="{{ project.title }}">
-            <p>{{ project.description|safe }}</p>
+            <div class="project-content blog-content mb-4">
+                {{ project.description|embed_gifs|safe }}
+            </div>
             {% if project.trailer_url %}
             <div class="trailer mb-3">
                 <h5>Watch Trailer</h5>
@@ -98,34 +100,10 @@
 
         // Check if jQuery is available
         if (typeof $ !== 'undefined') {
-
-            // Select all p elements
-            const pElements = $('p');
-
-            pElements.each(function() {
-                const pElement = $(this);
-
-                // Select the img element within the p element
-                const imgElement = pElement.find('img');
-
-                if (imgElement.length) {
-                    // Clear the content of the p element
-                    pElement.empty();
-
-                    // Append the img element back to the p element
-                    pElement.append(imgElement);
-
-                    // Apply custom styling to GIFs
-                    if (imgElement.attr('src').endsWith('.gif')) {
-                        imgElement.addClass('custom-gif');
-                    }
-                }
-            });
-
             $('#projectCarousel').carousel();
 
-            $('.carousel-image').on('click', function() {
-                var index = $(this).data('slide-to');
+            $('.carousel-image, .additional-image, .view-more-images').on('click', function() {
+                var index = $(this).data('slide-to') || 0;
                 $('#modalCarousel').carousel(index);
                 $('#imageModal').modal('show');
             });
@@ -134,17 +112,6 @@
                 $('#modalCarousel').carousel('cycle');
             }).on('hidden.bs.modal', function () {
                 $('#modalCarousel').carousel('pause');
-            });
-
-            // Hide all anchor elements that link to media.giphy.com
-            $('a[href^="https://media.giphy.com"]').each(function() {
-                $(this).hide();
-
-                // Find the img element within the anchor
-                var gifImage = $(this).find('img');
-
-                // Apply custom styling to GIFs
-                gifImage.addClass('custom-gif');
             });
         }
     });

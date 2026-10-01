@@ -4,7 +4,9 @@
 {% block content %}
 <div class="container">
     <h1>{{ project.title }}</h1>
-    <p>{{ project.description|safe }}</p>
+    <div class="project-content blog-content mb-4">
+        {{ project.description|embed_gifs|safe }}
+    </div>
     {% if project.trailer_url %}
     <div class="trailer mb-3">
         <h5>Watch Trailer</h5>
@@ -15,12 +17,14 @@
     {% endif %}
     <div class="row">
         <div class="col-md-12">
-            <img src="{{ project.image.url }}" class="img-fluid" alt="{{ project.title }}">
+            <img src="{{ project.image.url }}" class="img-fluid mb-3" alt="{{ project.title }}">
         </div>
         {% for image in project.additional_images.all %}
-        <div class="col-md-4">
-            <img src="{{ image.image.url }}" class="img-fluid" alt="{{ image.caption }}">
-            <p>{{ image.caption }}</p>
+        <div class="col-md-4 mb-3">
+            <img src="{{ image.image.url }}" class="img-fluid project-screenshot blog-screenshot rounded" alt="{{ image.caption }}">
+            {% if image.caption %}
+            <p class="text-center mt-1"><small>{{ image.caption }}</small></p>
+            {% endif %}
         </div>
         {% endfor %}
     </div>

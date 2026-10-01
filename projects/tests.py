@@ -1,6 +1,6 @@
 from django.test import TestCase, Client
 from django.urls import reverse
-from .models import BlogPost, Project
+from .models import BlogPost, Project, Profile
 
 class BlogSortTest(TestCase):
     def setUp(self):
@@ -58,3 +58,62 @@ class BlogSortTest(TestCase):
         self.assertEqual(posts[0].title, "Post 3")
         self.assertEqual(posts[1].title, "Post 2")
         self.assertEqual(posts[2].title, "Post 1")
+
+
+class ProjectImageScalingTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.profile = Profile.objects.create(
+            name="Vitor Barbosa",
+            title="Full Stack Developer",
+            bio="<p>Bio with https://media.giphy.com/media/example/giphy.gif</p>"
+        )
+        self.project_default = Project.objects.create(
+            title="Default Project",
+            category="Full Stack",
+            template="default",
+            featured=True,
+            description='<p>Sample project with pasted image <img src="https://example.com/screenshot.png" alt="screenshot"> and https://media.giphy.com/media/demo/giphy.gif</p>'
+        )
+        self.project_gallery = Project.objects.create(
+            title="Gallery Project",
+            category="Games",
+            template="gallery",
+            description='<p>Gallery description <img src="https://example.com/game.png"></p>'
+        )
+        self.project_feature = Project.objects.create(
+            title="Feature Project",
+            category="Full Stack",
+            template="feature",
+            description='<p>Feature description</p>'
+        )
+
+    def test_project_detail_templates_render_content_scaling_classes(self):
+        """Verify project detail views render project-content and blog-content classes for image scaling"""
+        for project in [self.project_default, self.project_gallery, self.project_feature]:
+            response = self.client.get(reverse('project_detail', args=[project.pk]))
+            self.assertEqual(response.status_code, 200)
+            self.assertContains(response, 'project-content')
+            self.assertContains(response, 'blog-content')
+            self.assertContains(response, 'project-hero-img')
+
+    def test_project_detail_embeds_gifs(self):
+        """Verify GIFs in project descriptions are properly embedded with custom-gif class"""
+        response = self.client.get(reverse('project_detail', args=[self.project_default.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'custom-gif')
+
+    def test_project_list_card_images_have_uniform_scaling_classes(self):
+        """Verify card images across project listings use project-card-img and blog-card-img"""
+        for url_name in ['home', 'full_stack', 'games']:
+            response = self.client.get(reverse(url_name))
+            self.assertEqual(response.status_code, 200)
+            self.assertContains(response, 'project-card-img')
+            self.assertContains(response, 'blog-card-img')
+
+    def test_home_page_bio_has_content_scaling_and_gif_support(self):
+        """Verify home page profile bio has blog-content styling and embeds GIFs"""
+        response = self.client.get(reverse('home'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'blog-content')
+        self.assertContains(response, 'custom-gif')

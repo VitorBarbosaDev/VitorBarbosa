@@ -1,0 +1,91 @@
+/* Custom Admin CSS for better Summernote mobile experience */
+
+/* Base responsiveness for the Summernote container in admin */
+.django-summernote-widgets {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Ensure the editor doesn't overflow its container */
+.note-editor.note-frame {
+    width: 100% !important;
+}
+
+/* Full width for Summernote fields on all screens by stacking labels */
+.aligned .form-row.field-description label,
+.aligned .form-row.field-content label,
+.aligned .form-row.field-bio label {
+    width: 100% !important;
+    float: none !important;
+    display: block !important;
+    padding: 0 0 8px 0 !important;
+    text-align: left !important;
+}
+
+.aligned .form-row.field-description > div,
+.aligned .form-row.field-content > div,
+.aligned .form-row.field-bio > div {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    width: 100% !important;
+}
+
+/* Fix for Summernote flex-container that pushes editor to the right */
+.aligned .field-description .flex-container,
+.aligned .field-content .flex-container,
+.aligned .field-bio .flex-container {
+    display: block !important;
+    width: 100% !important;
+}
+
+/* On mobile, we need to adjust the Django admin layout to give Summernote room */
+@media (max-width: 768px) {
+    /* Stack labels for ALL fields on mobile */
+    .aligned label {
+        width: 100% !important;
+        float: none !important;
+        display: block !important;
+        padding: 0 0 5px 0 !important;
+        text-align: left !important;
+    }
+
+    /* Remove left margin from field containers */
+    .aligned .form-row > div, 
+    .aligned .form-row > label + div {
+        margin-left: 0 !important;
+        padding-left: 0 !important;
+        width: 100% !important;
+    }
+
+    /* Ensure form rows take full width */
+    .form-row {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box;
+    }
+
+    /* Toolbar responsiveness */
+    .note-toolbar {
+        display: flex !important;
+        flex-wrap: wrap !important;
+    }
+
+    .note-btn-group {
+        margin-right: 2px !important;
+        margin-bottom: 2px !important;
+    }
+
+    .note-btn {
+        padding: 4px 8px !important;
+    }
+
+    /* Make the editor take more space on small screens */
+    .note-editor .note-editing-area .note-editable {
+        padding: 10px !important;
+        font-size: 16px !important;
+    }
+    
+    .note-editor.note-frame .note-editing-area {
+        min-height: 300px;
+    }
+}
