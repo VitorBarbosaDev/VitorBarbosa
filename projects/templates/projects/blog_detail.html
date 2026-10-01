@@ -41,7 +41,7 @@
     <div class="row">
         {% for img in post.images.all %}
         <div class="col-md-4 mb-3">
-            <img src="{{ img.image.url }}" class="img-fluid blog-screenshot" alt="{{ img.caption }}" data-bs-toggle="modal" data-bs-target="#blogImageModal" data-img-src="{{ img.image.url }}" data-img-caption="{{ img.caption }}">
+            <img src="{{ img.image.url }}" class="img-fluid blog-screenshot rounded" alt="{{ img.caption }}" data-img-src="{{ img.image.url }}" data-img-caption="{{ img.caption }}">
             {% if img.caption %}
             <p class="text-center mt-1"><small>{{ img.caption }}</small></p>
             {% endif %}
@@ -51,15 +51,15 @@
 
     <!-- Image modal -->
     <div class="modal fade" id="blogImageModal" tabindex="-1" aria-labelledby="blogImageModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="blogImageModalLabel">Image</h5>
+                    <h5 class="modal-title" id="blogImageModalLabel">{{ post.title }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body text-center">
-                    <img src="" class="img-fluid" id="blogModalImg" alt="">
-                    <p class="mt-2" id="blogModalCaption"></p>
+                <div class="modal-body text-center p-3">
+                    <img src="" class="img-fluid modal-carousel-img rounded" id="blogModalImg" alt="">
+                    <p class="mt-2 mb-0" id="blogModalCaption"></p>
                 </div>
             </div>
         </div>
@@ -96,13 +96,19 @@
 {% block extra_scripts %}
 <script>
     $(document).ready(function() {
-        $('.blog-screenshot').on('click', function() {
-            var src = $(this).data('img-src');
-            var caption = $(this).data('img-caption');
-            $('#blogModalImg').attr('src', src);
-            $('#blogModalCaption').text(caption);
-            $('#blogImageModalLabel').text(caption || 'Image');
-        });
+        var modalEl = document.getElementById('blogImageModal');
+        if (modalEl && typeof bootstrap !== 'undefined') {
+            $('.blog-screenshot').on('click', function(e) {
+                e.preventDefault();
+                var src = $(this).data('img-src');
+                var caption = $(this).data('img-caption');
+                $('#blogModalImg').attr('src', src);
+                $('#blogModalCaption').text(caption || '');
+                $('#blogImageModalLabel').text(caption || '{{ post.title }}');
+                var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                modal.show();
+            });
+        }
     });
 </script>
 {% endblock extra_scripts %}

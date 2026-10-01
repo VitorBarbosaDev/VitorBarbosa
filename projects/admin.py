@@ -25,6 +25,7 @@ class ProjectAdmin(SummernoteModelAdmin):
         css = {
             'all': ('projects/css/admin_custom.css',),
         }
+        js = ('projects/js/admin_custom.js',)
 
 class CVAdmin(admin.ModelAdmin):
     list_display = ('resume',)
@@ -38,6 +39,7 @@ class ProfileAdmin(SummernoteModelAdmin):
         css = {
             'all': ('projects/css/admin_custom.css',),
         }
+        js = ('projects/js/admin_custom.js',)
 
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(CV, CVAdmin)
@@ -65,6 +67,7 @@ class BlogPostAdmin(SummernoteModelAdmin):
         css = {
             'all': ('projects/css/admin_custom.css',),
         }
+        js = ('projects/js/admin_custom.js',)
 
     @admin.action(description='Go live — publish selected posts')
     def go_live(self, request, queryset):

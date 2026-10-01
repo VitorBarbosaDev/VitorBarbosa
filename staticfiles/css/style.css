@@ -134,6 +134,72 @@ footer a {
     cursor: pointer;
 }
 
+/* ---- Modal & Lightbox Styling (Dark Theme) ---- */
+.modal-content {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    border: 1px solid #333333;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    overflow: hidden;
+}
+
+.modal-header {
+    background-color: #1a1a1a;
+    border-bottom: 1px solid #333333;
+    padding: 1rem 1.25rem;
+}
+
+.modal-footer {
+    background-color: #1a1a1a;
+    border-top: 1px solid #333333;
+}
+
+.modal-title {
+    color: #4caf50;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+.modal-header .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+    opacity: 0.8;
+}
+
+.modal-header .btn-close:hover {
+    opacity: 1;
+}
+
+.modal-body {
+    background-color: #121212;
+}
+
+.modal-carousel-img {
+    max-height: 75vh;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    background-color: #0d0d0d;
+    margin: 0 auto;
+    display: block;
+    border-radius: 4px;
+}
+
+#modalCarousel .carousel-item {
+    text-align: center;
+    background-color: #0d0d0d;
+}
+
+#modalCarousel .carousel-caption {
+    background: rgba(0, 0, 0, 0.75);
+    border-radius: 4px;
+    padding: 6px 14px;
+    bottom: 12px;
+    left: 10%;
+    right: 10%;
+}
+
 .modal-content .img-fluid {
     max-width: 100%;
     height: auto;

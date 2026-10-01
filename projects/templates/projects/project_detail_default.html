@@ -21,10 +21,12 @@
         <div class="carousel-inner">
             {% for image in project.additional_images.all %}
             <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                <img src="{{ image.image.url }}" class="d-block w-100 carousel-image" alt="{{ image.caption }}" data-bs-toggle="modal" data-bs-target="#imageModal" data-slide-to="{{ forloop.counter0 }}">
+                <img src="{{ image.image.url }}" class="d-block w-100 carousel-image" alt="{{ image.caption }}" data-slide-to="{{ forloop.counter0 }}">
+                {% if image.caption %}
                 <div class="carousel-caption d-none d-md-block">
                     <p>{{ image.caption }}</p>
                 </div>
+                {% endif %}
             </div>
             {% endfor %}
         </div>
@@ -71,21 +73,27 @@
 
 {% if project.additional_images.all %}
 <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="imageModalLabel">Image</h5>
+                <h5 class="modal-title" id="imageModalLabel">{{ project.title }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <div id="modalCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="modal-body p-0">
+                <div id="modalCarousel" class="carousel slide" data-bs-interval="false">
                     <div class="carousel-inner">
                         {% for image in project.additional_images.all %}
                         <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                            <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ image.caption }}">
+                            <img src="{{ image.image.url }}" class="d-block w-100 modal-carousel-img" alt="{{ image.caption }}">
+                            {% if image.caption %}
+                            <div class="carousel-caption d-block">
+                                <p class="mb-0">{{ image.caption }}</p>
+                            </div>
+                            {% endif %}
                         </div>
                         {% endfor %}
                     </div>
+                    {% if project.additional_images.count > 1 %}
                     <button class="carousel-control-prev" type="button" data-bs-target="#modalCarousel" data-bs-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                         <span class="visually-hidden">Previous</span>
@@ -94,6 +102,7 @@
                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
                         <span class="visually-hidden">Next</span>
                     </button>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -103,27 +112,61 @@
 {% endblock content %}
 
 {% block extra_scripts %}
-
 <script>
     $(document).ready(function() {
+        var modalEl = document.getElementById('imageModal');
+        var modalCarouselEl = document.getElementById('modalCarousel');
+        var projectCarouselEl = document.getElementById('projectCarousel');
 
-        // Check if jQuery is available
-        if (typeof $ !== 'undefined') {
-            $('#projectCarousel').carousel();
+        // Initialize page carousel if present
+        if (projectCarouselEl && typeof bootstrap !== 'undefined') {
+            bootstrap.Carousel.getOrCreateInstance(projectCarouselEl, {
+                interval: 5000,
+                ride: 'carousel',
+                wrap: true
+            });
+        }
 
-            $('.carousel-image').on('click', function() {
-                var index = $(this).data('slide-to');
-                $('#modalCarousel').carousel(index);
-                $('#imageModal').modal('show');
+        if (modalEl && modalCarouselEl && typeof bootstrap !== 'undefined') {
+            // Modal carousel must never auto-cycle
+            var modalCarousel = bootstrap.Carousel.getOrCreateInstance(modalCarouselEl, {
+                interval: false,
+                ride: false,
+                wrap: true,
+                keyboard: true
             });
 
-            $('#imageModal').on('shown.bs.modal', function () {
-                $('#modalCarousel').carousel('cycle');
-            }).on('hidden.bs.modal', function () {
-                $('#modalCarousel').carousel('pause');
+            $('.carousel-image').on('click', function(e) {
+                e.preventDefault();
+                var index = parseInt($(this).data('slide-to'), 10) || 0;
+
+                var items = modalCarouselEl.querySelectorAll('.carousel-item');
+                if (items.length > 0) {
+                    items.forEach(function(item, i) {
+                        if (i === index) {
+                            item.classList.add('active');
+                        } else {
+                            item.classList.remove('active', 'carousel-item-start', 'carousel-item-end', 'carousel-item-next', 'carousel-item-prev');
+                        }
+                    });
+                }
+
+                var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                modal.show();
             });
+
+            // Pause the background carousel while the lightbox modal is open
+            if (projectCarouselEl) {
+                modalEl.addEventListener('show.bs.modal', function() {
+                    var pc = bootstrap.Carousel.getInstance(projectCarouselEl);
+                    if (pc) pc.pause();
+                });
+                modalEl.addEventListener('hidden.bs.modal', function() {
+                    var pc = bootstrap.Carousel.getInstance(projectCarouselEl);
+                    if (pc) pc.cycle();
+                });
+            }
         }
     });
 </script>
-
 {% endblock %}

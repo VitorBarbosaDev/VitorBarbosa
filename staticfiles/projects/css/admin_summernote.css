@@ -1,0 +1,433 @@
+/* ==========================================================================
+   Summernote Editor Custom Theme & Styling (Admin Content Panel)
+   Matches the portfolio site dark theme (#121212, #4caf50 accent, #e0e0e0 text)
+   with support for dynamic Dark/Light mode toggling & color contrast safety.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Base Reset & Font Setup
+   -------------------------------------------------------------------------- */
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.note-editor {
+    margin-bottom: 0 !important;
+    border-radius: 6px !important;
+    overflow: hidden;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Ensure images and GIFs in the editor scale responsively */
+.note-editable img {
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.note-editable video,
+.note-editable iframe {
+    max-width: 100% !important;
+    border-radius: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   2. Dark Mode (Default / Active Theme)
+   -------------------------------------------------------------------------- */
+body.editor-dark-mode,
+.editor-dark-mode {
+    background-color: #121212 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Outer frame in dark mode */
+.editor-dark-mode .note-editor.note-frame {
+    background-color: #121212 !important;
+    border: 1px solid #333333 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Dark toolbar */
+.editor-dark-mode .note-toolbar {
+    background-color: #1e1e1e !important;
+    border-bottom: 1px solid #333333 !important;
+    padding: 6px 8px !important;
+}
+
+/* Dark toolbar buttons */
+.editor-dark-mode .note-btn {
+    background-color: #2a2a2a !important;
+    border: 1px solid #444444 !important;
+    color: #e0e0e0 !important;
+    border-radius: 4px !important;
+    padding: 5px 10px !important;
+    font-size: 13px !important;
+    transition: all 0.15s ease-in-out;
+}
+
+.editor-dark-mode .note-btn:hover,
+.editor-dark-mode .note-btn:focus,
+.editor-dark-mode .note-btn.active {
+    background-color: #383838 !important;
+    border-color: #4caf50 !important;
+    color: #4caf50 !important;
+}
+
+/* Dark status bar */
+.editor-dark-mode .note-statusbar {
+    background-color: #1a1a1a !important;
+    border-top: 1px solid #333333 !important;
+}
+
+.editor-dark-mode .note-statusbar .note-resizebar {
+    border-top: 1px solid #333333 !important;
+    background-color: #1a1a1a !important;
+}
+
+.editor-dark-mode .note-statusbar .note-resizebar .note-icon-bar {
+    border-top: 1px solid #555555 !important;
+}
+
+/* Editable content area in dark mode */
+.editor-dark-mode .note-editable {
+    background-color: #121212 !important;
+    color: #e0e0e0 !important;
+    font-family: 'Roboto', sans-serif !important;
+    font-size: 15px !important;
+    line-height: 1.7 !important;
+    padding: 18px !important;
+    min-height: 320px;
+}
+
+/* Headings in dark mode */
+.editor-dark-mode .note-editable h1,
+.editor-dark-mode .note-editable h2,
+.editor-dark-mode .note-editable h3,
+.editor-dark-mode .note-editable h4,
+.editor-dark-mode .note-editable h5,
+.editor-dark-mode .note-editable h6 {
+    font-family: 'Lato', sans-serif !important;
+    color: #4caf50 !important;
+    font-weight: 700 !important;
+    margin-top: 1.4rem;
+    margin-bottom: 0.7rem;
+    line-height: 1.3;
+}
+
+.editor-dark-mode .note-editable h1 { font-size: 2rem; }
+.editor-dark-mode .note-editable h2 { font-size: 1.65rem; }
+.editor-dark-mode .note-editable h3 { font-size: 1.35rem; }
+.editor-dark-mode .note-editable h4 { font-size: 1.15rem; }
+
+/* Links in dark mode */
+.editor-dark-mode .note-editable a {
+    color: #4caf50 !important;
+    text-decoration: underline;
+}
+
+.editor-dark-mode .note-editable a:hover {
+    color: #81c784 !important;
+}
+
+/* Paragraphs & Lists */
+.editor-dark-mode .note-editable p {
+    margin-bottom: 1rem;
+    color: inherit;
+}
+
+.editor-dark-mode .note-editable ul,
+.editor-dark-mode .note-editable ol {
+    margin-bottom: 1rem;
+    padding-left: 28px;
+    color: inherit;
+}
+
+.editor-dark-mode .note-editable li {
+    margin-bottom: 0.35rem;
+}
+
+/* Blockquotes in dark mode */
+.editor-dark-mode .note-editable blockquote {
+    border-left: 4px solid #4caf50 !important;
+    background-color: rgba(76, 175, 80, 0.08) !important;
+    padding: 10px 16px !important;
+    margin: 16px 0 !important;
+    color: #cccccc !important;
+    border-radius: 0 4px 4px 0;
+    font-style: italic;
+}
+
+/* Code & Pre in dark mode */
+.editor-dark-mode .note-editable pre,
+.editor-dark-mode .note-editable code {
+    background-color: #242424 !important;
+    color: #e0e0e0 !important;
+    border: 1px solid #383838 !important;
+    border-radius: 4px;
+    font-family: "Courier New", Courier, monospace;
+}
+
+.editor-dark-mode .note-editable pre {
+    padding: 12px 16px !important;
+    overflow-x: auto;
+}
+
+.editor-dark-mode .note-editable code {
+    padding: 2px 6px !important;
+}
+
+/* Tables in dark mode */
+.editor-dark-mode .note-editable table {
+    color: #e0e0e0 !important;
+    background-color: #1a1a1a !important;
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 1rem;
+    border: 1px solid #333333 !important;
+}
+
+.editor-dark-mode .note-editable table th,
+.editor-dark-mode .note-editable table td {
+    border: 1px solid #333333 !important;
+    padding: 8px 12px !important;
+}
+
+.editor-dark-mode .note-editable table th {
+    background-color: #2a2a2a !important;
+    color: #4caf50 !important;
+    font-weight: 700;
+}
+
+/* Horizontal rule in dark mode */
+.editor-dark-mode .note-editable hr {
+    border-color: #333333 !important;
+    margin: 1.5rem 0;
+}
+
+/* Dropdowns & Popovers in dark mode */
+.editor-dark-mode .dropdown-menu {
+    background-color: #1f1f1f !important;
+    border: 1px solid #3a3a3a !important;
+    color: #e0e0e0 !important;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6) !important;
+}
+
+.editor-dark-mode .dropdown-item,
+.editor-dark-mode .dropdown-menu li a {
+    color: #e0e0e0 !important;
+    padding: 6px 12px !important;
+}
+
+.editor-dark-mode .dropdown-item:hover,
+.editor-dark-mode .dropdown-item:focus,
+.editor-dark-mode .dropdown-menu li a:hover {
+    background-color: #2e7d32 !important;
+    color: #ffffff !important;
+}
+
+.editor-dark-mode .dropdown-divider {
+    border-color: #333333 !important;
+}
+
+.editor-dark-mode .note-popover .popover-content {
+    background-color: #1f1f1f !important;
+    border: 1px solid #3a3a3a !important;
+    border-radius: 4px;
+}
+
+/* Modals & Dialogs in dark mode */
+.editor-dark-mode .note-modal-content,
+.editor-dark-mode .modal-content {
+    background-color: #1e1e1e !important;
+    color: #e0e0e0 !important;
+    border: 1px solid #3a3a3a !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7) !important;
+}
+
+.editor-dark-mode .modal-header,
+.editor-dark-mode .modal-footer {
+    border-color: #333333 !important;
+}
+
+.editor-dark-mode .modal-title {
+    color: #4caf50 !important;
+    font-family: 'Lato', sans-serif;
+}
+
+.editor-dark-mode .form-control,
+.editor-dark-mode .note-form-control {
+    background-color: #121212 !important;
+    color: #e0e0e0 !important;
+    border: 1px solid #444444 !important;
+}
+
+.editor-dark-mode .form-control:focus,
+.editor-dark-mode .note-form-control:focus {
+    border-color: #4caf50 !important;
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25) !important;
+}
+
+/* Color Palette in dark mode */
+.editor-dark-mode .note-color-palette {
+    padding: 8px !important;
+}
+
+.editor-dark-mode .note-color-btn {
+    border: 1px solid #444444 !important;
+    border-radius: 2px !important;
+    margin: 1px !important;
+}
+
+.editor-dark-mode .note-color-btn:hover {
+    border-color: #ffffff !important;
+    transform: scale(1.15);
+}
+
+/* --------------------------------------------------------------------------
+   3. Light Mode (Toggled)
+   -------------------------------------------------------------------------- */
+body.editor-light-mode,
+.editor-light-mode {
+    background-color: #ffffff !important;
+    color: #212529 !important;
+}
+
+.editor-light-mode .note-editor.note-frame {
+    background-color: #ffffff !important;
+    border: 1px solid #ced4da !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.editor-light-mode .note-toolbar {
+    background-color: #f8f9fa !important;
+    border-bottom: 1px solid #ced4da !important;
+    padding: 6px 8px !important;
+}
+
+.editor-light-mode .note-btn {
+    background-color: #ffffff !important;
+    border: 1px solid #ced4da !important;
+    color: #212529 !important;
+    border-radius: 4px !important;
+    padding: 5px 10px !important;
+    font-size: 13px !important;
+}
+
+.editor-light-mode .note-btn:hover,
+.editor-light-mode .note-btn:focus,
+.editor-light-mode .note-btn.active {
+    background-color: #e9ecef !important;
+    border-color: #2e7d32 !important;
+    color: #2e7d32 !important;
+}
+
+.editor-light-mode .note-editable {
+    background-color: #ffffff !important;
+    color: #212529 !important;
+    font-family: 'Roboto', sans-serif !important;
+    font-size: 15px !important;
+    line-height: 1.7 !important;
+    padding: 18px !important;
+    min-height: 320px;
+}
+
+.editor-light-mode .note-editable h1,
+.editor-light-mode .note-editable h2,
+.editor-light-mode .note-editable h3,
+.editor-light-mode .note-editable h4,
+.editor-light-mode .note-editable h5,
+.editor-light-mode .note-editable h6 {
+    font-family: 'Lato', sans-serif !important;
+    color: #2e7d32 !important;
+    font-weight: 700 !important;
+    margin-top: 1.4rem;
+    margin-bottom: 0.7rem;
+}
+
+.editor-light-mode .note-editable a {
+    color: #198754 !important;
+    text-decoration: underline;
+}
+
+/* --------------------------------------------------------------------------
+   4. Text Color Contrast Safety Rules
+   (Prevents white text from being invisible on white bg,
+    and black text from being invisible on black bg)
+   -------------------------------------------------------------------------- */
+
+/* In LIGHT mode: Highlight white / light-colored text so it remains visible */
+.editor-light-mode .note-editable span[style*="color: #fff"],
+.editor-light-mode .note-editable span[style*="color: #FFF"],
+.editor-light-mode .note-editable span[style*="color: rgb(255, 255, 255)"],
+.editor-light-mode .note-editable span[style*="color: white"],
+.editor-light-mode .note-editable span[style*="color: #e0e0e0"],
+.editor-light-mode .note-editable span[style*="color: #E0E0E0"],
+.editor-light-mode .note-editable span[style*="color: rgb(224, 224, 224)"],
+.editor-light-mode .note-editable font[color="#ffffff"],
+.editor-light-mode .note-editable font[color="#fff"],
+.editor-light-mode .note-editable font[color="white"],
+.editor-light-mode .note-editable font[color="#e0e0e0"] {
+    background-color: #1e1e1e !important;
+    padding: 2px 6px !important;
+    border-radius: 3px !important;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+}
+
+/* In DARK mode: Highlight explicit black / dark text so author can see it */
+.editor-dark-mode .note-editable span[style*="color: #000000"],
+.editor-dark-mode .note-editable span[style*="color: #000"],
+.editor-dark-mode .note-editable span[style*="color: rgb(0, 0, 0)"],
+.editor-dark-mode .note-editable span[style*="color: black"],
+.editor-dark-mode .note-editable font[color="#000000"],
+.editor-dark-mode .note-editable font[color="#000"],
+.editor-dark-mode .note-editable font[color="black"] {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    padding: 2px 6px !important;
+    border-radius: 3px !important;
+    box-shadow: 0 0 3px rgba(255, 255, 255, 0.4);
+}
+
+/* --------------------------------------------------------------------------
+   5. Custom Toolbar Toggle Button
+   -------------------------------------------------------------------------- */
+.btn-theme-toggle {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+.btn-theme-toggle .theme-toggle-icon {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.btn-theme-toggle.btn-dark-active {
+    background-color: #1b5e20 !important;
+    border-color: #4caf50 !important;
+    color: #ffffff !important;
+}
+
+.btn-theme-toggle.btn-dark-active:hover {
+    background-color: #2e7d32 !important;
+    border-color: #66bb6a !important;
+}
+
+.btn-theme-toggle.btn-light-active {
+    background-color: #e2e6ea !important;
+    border-color: #adb5bd !important;
+    color: #212529 !important;
+}
+
+.btn-theme-toggle.btn-light-active:hover {
+    background-color: #dbe0e5 !important;
+}

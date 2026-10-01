@@ -145,6 +145,7 @@ SUMMERNOTE_CONFIG = {
     'iframe': True,
     'summernote': {
         'width': '100%',
+        'height': '480px',
         'toolbar': [
             ['style', ['style']],
             ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
@@ -156,8 +157,28 @@ SUMMERNOTE_CONFIG = {
             ['insert', ['link', 'picture', 'video', 'hr']],
             ['view', ['fullscreen', 'codeview', 'help']],
             ['history', ['undo', 'redo']],
+            ['theme', ['themeToggle']],
+        ],
+        'fontNames': [
+            'Roboto', 'Lato', 'Arial', 'Arial Black', 'Comic Sans MS',
+            'Courier New', 'Helvetica', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana'
+        ],
+        'fontNamesIgnoreCheck': ['Roboto', 'Lato'],
+        'colors': [
+            ['#000000', '#121212', '#1a1a1a', '#2a2a2a', '#333333', '#555555', '#777777', '#aaaaaa', '#e0e0e0', '#ffffff'],
+            ['#4caf50', '#45a049', '#66bb6a', '#81c784', '#2e7d32', '#1b5e20', '#00e676', '#a5d6a7', '#c8e6c9', '#e8f5e9'],
+            ['#2196f3', '#1976d2', '#0d47a1', '#00bcd4', '#009688', '#00acc1', '#03a9f4', '#29b6f6', '#4fc3f7', '#e1f5fe'],
+            ['#f44336', '#e53935', '#d32f2f', '#ff5722', '#ff9800', '#ffc107', '#ffeb3b', '#cddc39', '#8bc34a', '#ffcc80'],
+            ['#9c27b0', '#8e24aa', '#673ab7', '#5e35b1', '#3f51b5', '#e91e63', '#d81b60', '#795548', '#607d8b', '#343a40'],
         ],
     },
+    'css': (
+        '//fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Lato:ital,wght@0,400;0,700;1,400&display=swap',
+        '/static/projects/css/admin_summernote.css',
+    ),
+    'js': (
+        '/static/projects/js/admin_summernote.js',
+    ),
 }
 
 # Logging configuration

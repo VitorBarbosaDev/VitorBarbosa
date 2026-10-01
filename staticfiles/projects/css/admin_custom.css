@@ -1,4 +1,4 @@
-/* Custom Admin CSS for better Summernote mobile experience */
+/* Custom Admin CSS for better Summernote mobile experience and Theme Toggle */
 
 /* Base responsiveness for the Summernote container in admin */
 .django-summernote-widgets {
@@ -9,6 +9,81 @@
 /* Ensure the editor doesn't overflow its container */
 .note-editor.note-frame {
     width: 100% !important;
+}
+
+/* Summernote Theme Bar above editor in Django Admin */
+.summernote-theme-bar {
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    background: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    border-radius: 6px;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.summernote-theme-bar .theme-bar-content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.summernote-theme-bar .theme-bar-label {
+    color: #e0e0e0;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.summernote-theme-bar .theme-btn-group {
+    display: inline-flex;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid #444444;
+}
+
+.summernote-theme-bar .btn-theme-admin {
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    background: #1e1e1e;
+    color: #aaaaaa;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.summernote-theme-bar .btn-theme-admin:hover {
+    color: #ffffff;
+    background: #333333;
+}
+
+.summernote-theme-bar .btn-theme-admin.btn-theme-dark.active {
+    background: #1b5e20;
+    color: #ffffff;
+}
+
+.summernote-theme-bar .btn-theme-admin.btn-theme-light.active {
+    background: #e9ecef;
+    color: #212529;
+}
+
+.summernote-theme-bar .theme-bar-hint {
+    color: #888888;
+    font-size: 12px;
+    font-style: italic;
+    margin-left: auto;
+}
+
+@media (max-width: 768px) {
+    .summernote-theme-bar .theme-bar-hint {
+        margin-left: 0;
+        width: 100%;
+    }
 }
 
 /* Full width for Summernote fields on all screens by stacking labels */
