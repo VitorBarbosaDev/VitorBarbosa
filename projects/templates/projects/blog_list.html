@@ -55,12 +55,16 @@
             <span class="text-muted-light me-2">Sort by:</span>
             <div class="btn-group" role="group">
                 <a href="?{% if active_project %}project={{ active_project.slug }}&{% endif %}{% if show_untagged %}untagged=1&{% endif %}sort=date" 
-                   class="btn btn-sm {% if current_sort != 'views' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                   class="btn btn-sm {% if current_sort != 'views' and current_sort != 'likes' %}btn-primary{% else %}btn-outline-primary{% endif %}">
                     Latest
                 </a>
                 <a href="?{% if active_project %}project={{ active_project.slug }}&{% endif %}{% if show_untagged %}untagged=1&{% endif %}sort=views" 
                    class="btn btn-sm {% if current_sort == 'views' %}btn-primary{% else %}btn-outline-primary{% endif %}">
                     Most Viewed
+                </a>
+                <a href="?{% if active_project %}project={{ active_project.slug }}&{% endif %}{% if show_untagged %}untagged=1&{% endif %}sort=likes" 
+                   class="btn btn-sm {% if current_sort == 'likes' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                    Most Liked
                 </a>
             </div>
         </div>
@@ -77,7 +81,7 @@
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">{{ post.title }}</h5>
                     <p class="blog-date mb-1"><small>{{ post.created_on|date:"M d, Y" }}</small></p>
-                    <p class="blog-views text-muted-light mb-2"><small><i class="fas fa-eye"></i> {{ post.views }} views</small></p>
+                    <p class="blog-views text-muted-light mb-2"><small><i class="fas fa-eye"></i> {{ post.views }} view{{ post.views|pluralize }} · <i class="fas fa-heart text-danger"></i> {{ post.likes }} like{{ post.likes|pluralize }}</small></p>
                     <div class="card-text">{{ post.content|truncatewords_html:30|safe }}</div>
                     <div class="mt-2 mb-2">
                         {% for proj in post.projects.all %}

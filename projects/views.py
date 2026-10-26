@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.http import JsonResponse
 from django.core.paginator import Paginator
 from django.contrib import messages
 from django.core.validators import validate_email
@@ -71,6 +72,8 @@ def blog_list(request):
     sort = request.GET.get('sort')
     if sort == 'views':
         posts = posts.order_by('-views', '-created_on')
+    elif sort == 'likes':
+        posts = posts.order_by('-likes', '-created_on')
     else:
         # Default is already -created_on in Meta, but we can be explicit
         posts = posts.order_by('-created_on')
@@ -112,8 +115,49 @@ def blog_detail(request, slug):
     post = get_object_or_404(BlogPost, slug=slug, is_live=True)
     # Increment view count atomically
     BlogPost.objects.filter(pk=post.pk).update(views=F('views') + 1)
-    post.refresh_from_db(fields=['views'])
-    return render(request, 'projects/blog_detail.html', {'post': post})
+    post.refresh_from_db(fields=['views', 'likes'])
+    liked_posts = request.session.get('liked_posts', [])
+    is_liked = post.pk in liked_posts
+    return render(request, 'projects/blog_detail.html', {
+        'post': post,
+        'is_liked': is_liked,
+    })
+
+
+def blog_like(request, slug):
+    post = get_object_or_404(BlogPost, slug=slug, is_live=True)
+    if request.method == 'POST':
+        liked_posts = request.session.get('liked_posts', [])
+        if post.pk in liked_posts:
+            # Unlike: decrement likes count safely
+            BlogPost.objects.filter(pk=post.pk, likes__gt=0).update(likes=F('likes') - 1)
+            liked_posts.remove(post.pk)
+            is_liked = False
+        else:
+            # Like: increment likes count
+            BlogPost.objects.filter(pk=post.pk).update(likes=F('likes') + 1)
+            liked_posts.append(post.pk)
+            is_liked = True
+
+        request.session['liked_posts'] = liked_posts
+        request.session.modified = True
+        post.refresh_from_db(fields=['likes'])
+
+        is_ajax = (
+            request.headers.get('x-requested-with') == 'XMLHttpRequest'
+            or request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+            or request.content_type == 'application/json'
+            or request.POST.get('ajax') == 'true'
+        )
+        if is_ajax:
+            return JsonResponse({
+                'liked': is_liked,
+                'likes_count': post.likes,
+            })
+
+        return redirect('blog_detail', slug=post.slug)
+
+    return redirect('blog_detail', slug=post.slug)
 
 
 def subscribe(request):

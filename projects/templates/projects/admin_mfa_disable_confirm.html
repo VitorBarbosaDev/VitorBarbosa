@@ -1,0 +1,66 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+  .mfa-disable-container {
+    max-width: 650px;
+    margin: 20px 0;
+    padding: 24px;
+    background: var(--body-bg, #ffffff);
+    color: var(--body-fg, #333333);
+    border: 1px solid var(--border-color, #dddddd);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  .danger-box {
+    background: #ffebee;
+    border: 1px solid #ef5350;
+    color: #c62828;
+    padding: 16px 20px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+  <a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+  &rsaquo; <a href="{% url 'admin:auth_user_changelist' %}">Users</a>
+  &rsaquo; <a href="{{ user_url }}">{{ user_obj.username }}</a>
+  &rsaquo; {% translate 'Disable Two-Factor Authentication' %}
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+  <h1>Disable Two-Factor Authentication — {{ user_obj.username }}</h1>
+
+  <div class="mfa-disable-container">
+    <div class="danger-box">
+      <h3 style="margin-top: 0; color: #b71c1c;">⚠️ Warning</h3>
+      <p style="margin: 0; line-height: 1.5;">
+        Are you sure you want to disable Two-Factor Authentication for <strong>{{ user_obj.username }}</strong>?
+      </p>
+      <p style="margin: 10px 0 0 0; line-height: 1.5;">
+        This will remove all configured authenticator devices and emergency backup tokens. The account will no longer require OTP verification when logging in.
+      </p>
+    </div>
+
+    <form method="post" action="">
+      {% csrf_token %}
+      <div style="display: flex; gap: 12px; align-items: center;">
+        <button type="submit" class="button" style="background: #d32f2f; color: #ffffff; font-weight: bold; padding: 10px 20px; border-radius: 4px; border: none; cursor: pointer;">
+          Yes, Disable 2FA
+        </button>
+        <a href="{{ user_url }}" class="button" style="padding: 10px 18px; border-radius: 4px; text-decoration: none;">
+          Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

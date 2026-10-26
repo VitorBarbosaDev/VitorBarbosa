@@ -1,0 +1,13 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls %}
+
+{% block object-tools-items %}
+  {% if change and not is_popup and original.pk %}
+    <li>
+      <a href="{% url 'admin:auth_user_mfa_setup' original.pk %}" class="historylink" style="background: #4caf50; color: #ffffff !important; font-weight: bold; border-radius: 4px; padding: 4px 12px; margin-right: 6px; text-decoration: none; border: 1px solid #388e3c; display: inline-flex; align-items: center; gap: 4px;">
+        <i class="fas fa-qrcode"></i> 📱 Add / Manage MFA
+      </a>
+    </li>
+  {% endif %}
+  {{ block.super }}
+{% endblock %}

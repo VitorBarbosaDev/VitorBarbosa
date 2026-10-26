@@ -1,0 +1,136 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+  .mfa-tokens-container {
+    max-width: 750px;
+    margin: 20px 0;
+    padding: 24px;
+    background: var(--body-bg, #ffffff);
+    color: var(--body-fg, #333333);
+    border: 1px solid var(--border-color, #dddddd);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  .backup-codes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    margin: 16px 0;
+  }
+  .backup-code-item {
+    background: var(--body-bg, #ffffff);
+    border: 1px dashed var(--border-color, #999999);
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+    color: var(--body-fg, #111111);
+    letter-spacing: 1px;
+  }
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+  }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+  <a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+  &rsaquo; <a href="{% url 'admin:auth_user_changelist' %}">Users</a>
+  &rsaquo; <a href="{{ user_url }}">{{ user_obj.username }}</a>
+  &rsaquo; {% translate 'Backup Recovery Tokens' %}
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+  <h1>Emergency Backup Recovery Tokens — {{ user_obj.username }}</h1>
+
+  <div class="mfa-tokens-container">
+    <p style="font-size: 14px; line-height: 1.5;">
+      Emergency backup tokens are single-use passwords. If you lose access to your authenticator app, each code can be entered once in place of the 6-digit TOTP token to log into the admin site.
+    </p>
+
+    {% if backup_tokens %}
+    <div style="background: var(--darkened-bg, #f9f9f9); border: 1px solid var(--border-color, #e0e0e0); border-radius: 6px; padding: 18px; margin: 18px 0;">
+      <h3 style="margin-top: 0; color: #1976d2;">
+        Active Backup Tokens ({{ backup_tokens|length }} remaining)
+      </h3>
+
+      <div class="backup-codes-grid">
+        {% for token in backup_tokens %}
+        <div class="backup-code-item">{{ token }}</div>
+        {% endfor %}
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap;">
+        <button type="button" class="action-btn" style="background: #2196f3; color: #fff;" onclick="copyBackupCodes()">
+          📋 Copy All Tokens
+        </button>
+        <button type="button" class="action-btn" style="background: #757575; color: #fff;" onclick="window.print()">
+          🖨️ Print / Save PDF
+        </button>
+      </div>
+    </div>
+    {% else %}
+    <div style="background: #fff3e0; border: 1px solid #ffe0b2; color: #e65100; border-radius: 6px; padding: 16px; margin: 18px 0;">
+      <strong>No remaining backup recovery tokens found.</strong> Generate a fresh set below.
+    </div>
+    {% endif %}
+
+    <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border-color, #eee);">
+      <h3>Generate New Backup Recovery Tokens</h3>
+      <p style="font-size: 13px; color: #888;">
+        Generating new tokens will invalidate any existing unused recovery tokens.
+      </p>
+      <form method="post" action="">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="generate" />
+        <button type="submit" class="action-btn" style="background: #e65100; color: #ffffff;" onclick="return confirm('Generate new backup tokens? Any old recovery tokens will be replaced.');">
+          🔄 Generate 8 New Backup Tokens
+        </button>
+      </form>
+    </div>
+
+    <div style="margin-top: 24px;">
+      <a href="{{ user_url }}" class="button" style="padding: 10px 18px; border-radius: 4px; text-decoration: none;">
+        ← Return to User Account
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  function copyBackupCodes() {
+    var items = document.querySelectorAll('.backup-code-item');
+    var tokens = [];
+    items.forEach(function(el) {
+      tokens.push(el.innerText.trim());
+    });
+    var text = "Emergency Backup Recovery Tokens for {{ user_obj.username }}:\n" + tokens.join("\n");
+    navigator.clipboard.writeText(text).then(function() {
+      var btn = event.target;
+      var orig = btn.innerText;
+      btn.innerText = "✓ Tokens Copied!";
+      setTimeout(function() {
+        btn.innerText = orig;
+      }, 2000);
+    }).catch(function(err) {
+      console.error('Failed to copy: ', err);
+    });
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,143 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+  .mfa-success-container {
+    max-width: 750px;
+    margin: 20px 0;
+    padding: 24px;
+    background: var(--body-bg, #ffffff);
+    color: var(--body-fg, #333333);
+    border: 1px solid var(--border-color, #dddddd);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  .success-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #2e7d32;
+    color: #ffffff;
+    padding: 16px 20px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 24px;
+  }
+  .backup-codes-box {
+    background: var(--darkened-bg, #f9f9f9);
+    border: 1px solid var(--border-color, #e0e0e0);
+    border-radius: 6px;
+    padding: 20px;
+    margin-top: 20px;
+  }
+  .backup-codes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    margin: 16px 0;
+  }
+  .backup-code-item {
+    background: var(--body-bg, #ffffff);
+    border: 1px dashed var(--border-color, #999999);
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+    color: var(--body-fg, #111111);
+    letter-spacing: 1px;
+  }
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    border: none;
+  }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+  <a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+  &rsaquo; <a href="{% url 'admin:auth_user_changelist' %}">Users</a>
+  &rsaquo; <a href="{{ user_url }}">{{ user_obj.username }}</a>
+  &rsaquo; {% translate '2FA Enabled' %}
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+  <div class="mfa-success-container">
+    <div class="success-banner">
+      <span style="font-size: 24px;">✓</span>
+      <div>Two-Factor Authentication is now active for {{ user_obj.username }}!</div>
+    </div>
+
+    <p style="font-size: 15px; line-height: 1.5;">
+      Your authenticator app has been verified and registered. The next time <strong>{{ user_obj.username }}</strong> logs into the admin site, a 6-digit TOTP code will be required after entering the password.
+    </p>
+
+    {% if backup_tokens %}
+    <div class="backup-codes-box">
+      <h3 style="margin-top: 0; color: #d32f2f; display: flex; align-items: center; gap: 8px;">
+        ⚠️ Emergency Backup Recovery Tokens
+      </h3>
+      <p style="font-size: 13px; opacity: 0.9;">
+        Save these single-use recovery tokens in a secure password manager or offline location. If you ever lose access to your authenticator app or phone, you can enter any one of these tokens to log into your account:
+      </p>
+
+      <div class="backup-codes-grid" id="backupCodesGrid">
+        {% for token in backup_tokens %}
+        <div class="backup-code-item">{{ token }}</div>
+        {% endfor %}
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap;">
+        <button type="button" class="action-btn" style="background: #2196f3; color: #fff;" onclick="copyBackupCodes()">
+          📋 Copy All Tokens
+        </button>
+        <button type="button" class="action-btn" style="background: #757575; color: #fff;" onclick="window.print()">
+          🖨️ Print / Save PDF
+        </button>
+      </div>
+    </div>
+    {% endif %}
+
+    <div style="margin-top: 24px;">
+      <a href="{{ user_url }}" class="button default" style="background: #4caf50; color: #ffffff; padding: 10px 22px; font-weight: bold; border-radius: 6px; text-decoration: none; font-size: 14px;">
+        ← Return to User Account
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  function copyBackupCodes() {
+    var items = document.querySelectorAll('.backup-code-item');
+    var tokens = [];
+    items.forEach(function(el) {
+      tokens.push(el.innerText.trim());
+    });
+    var text = "Emergency Backup Recovery Tokens for {{ user_obj.username }}:\n" + tokens.join("\n");
+    navigator.clipboard.writeText(text).then(function() {
+      var btn = event.target;
+      var orig = btn.innerText;
+      btn.innerText = "✓ Tokens Copied!";
+      setTimeout(function() {
+        btn.innerText = orig;
+      }, 2000);
+    }).catch(function(err) {
+      console.error('Failed to copy: ', err);
+    });
+  }
+</script>
+{% endblock %}

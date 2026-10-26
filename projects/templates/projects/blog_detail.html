@@ -4,13 +4,13 @@
 {% block content %}
 <div class="container">
     <h1>{{ post.title }}</h1>
-    <p class="blog-date">{{ post.created_on|date:"F d, Y" }}{% if post.updated_on != post.created_on %} · Updated {{ post.updated_on|date:"F d, Y" }}{% endif %} · <i class="fas fa-eye"></i> {{ post.views }} view{{ post.views|pluralize }}</p>
+    <p class="blog-date">{{ post.created_on|date:"F d, Y" }}{% if post.updated_on != post.created_on %} · Updated {{ post.updated_on|date:"F d, Y" }}{% endif %} · <i class="fas fa-eye"></i> {{ post.views }} view{{ post.views|pluralize }} · <i class="fas fa-heart text-danger"></i> <span id="header-likes-count">{{ post.likes }}</span> like{{ post.likes|pluralize }}</p>
 
     <!-- Tagged projects -->
     {% if post.projects.all %}
     <div class="mb-3">
         {% for proj in post.projects.all %}
-        <a href="{% url 'project_detail' proj.slug %}" class="badge blog-badge text-decoration-none" title="{{ proj.title }}">{{ proj.title|truncatechars:25 }}</a>
+        <a href="{% url 'project_detail' proj.slug %}" class="badge blog-badge text-decoration-none" title="{{ proj.title }}">{{ proj.title }}</a>
         {% endfor %}
     </div>
     {% endif %}
@@ -66,6 +66,20 @@
     </div>
     {% endif %}
 
+    <!-- Like button section -->
+    <div class="blog-like-section my-4 p-3 rounded d-flex align-items-center">
+        <form id="like-form" method="POST" action="{% url 'blog_like' post.slug %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" id="like-btn" class="btn {% if is_liked %}btn-danger liked{% else %}btn-outline-danger{% endif %} me-3" data-slug="{{ post.slug }}">
+                <i class="{% if is_liked %}fas{% else %}far{% endif %} fa-heart" id="like-icon"></i>
+                <span id="like-btn-text">{% if is_liked %}Liked{% else %}Like{% endif %}</span>
+            </button>
+        </form>
+        <span class="text-muted-light">
+            <span id="likes-count-text">{{ post.likes }}</span> <span id="likes-count-label">{% if post.likes == 1 %}reader liked this post{% else %}readers liked this post{% endif %}</span>
+        </span>
+    </div>
+
     <!-- Related project links -->
     {% if post.projects.all %}
     <hr>
@@ -109,6 +123,51 @@
                 modal.show();
             });
         }
+
+        $('#like-form').on('submit', function(e) {
+            e.preventDefault();
+            var form = $(this);
+            var url = form.attr('action');
+            var csrfToken = form.find('input[name="csrfmiddlewaretoken"]').val();
+            var btn = $('#like-btn');
+            var icon = $('#like-icon');
+            var btnText = $('#like-btn-text');
+            var countText = $('#likes-count-text');
+            var countLabel = $('#likes-count-label');
+            var headerCount = $('#header-likes-count');
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: {
+                    csrfmiddlewaretoken: csrfToken
+                },
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                success: function(data) {
+                    if (data.liked) {
+                        btn.removeClass('btn-outline-danger').addClass('btn-danger liked');
+                        icon.removeClass('far').addClass('fas');
+                        btnText.text('Liked');
+                    } else {
+                        btn.removeClass('btn-danger liked').addClass('btn-outline-danger');
+                        icon.removeClass('fas').addClass('far');
+                        btnText.text('Like');
+                    }
+                    countText.text(data.likes_count);
+                    if (headerCount.length) {
+                        headerCount.text(data.likes_count);
+                    }
+                    var plural = data.likes_count === 1 ? 'reader liked this post' : 'readers liked this post';
+                    countLabel.text(plural);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Like request failed:', error);
+                    form.off('submit').submit();
+                }
+            });
+        });
     });
 </script>
 {% endblock extra_scripts %}

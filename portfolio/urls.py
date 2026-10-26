@@ -28,6 +28,7 @@ urlpatterns = [
     path('project/<slug:slug>/', views.project_detail, name='project_detail'),
     path('blog/', views.blog_list, name='blog_list'),
     path('blog/<slug:slug>/', views.blog_detail, name='blog_detail'),
+    path('blog/<slug:slug>/like/', views.blog_like, name='blog_like'),
     path('subscribe/', views.subscribe, name='subscribe'),
     path(
         'unsubscribe/<uuid:token>/',

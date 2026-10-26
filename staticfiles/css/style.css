@@ -454,3 +454,34 @@ a[href$=".gif"] {
     background-color: #4caf50;
     color: #fff;
 }
+
+/* ---- Blog Like Section ---- */
+.blog-like-section {
+    background-color: #202020;
+    border: 1px solid #333;
+}
+
+.blog-like-section .btn-outline-danger {
+    color: #ff6b6b;
+    border-color: #ff6b6b;
+    transition: all 0.2s ease-in-out;
+}
+
+.blog-like-section .btn-outline-danger:hover {
+    background-color: #e0245e;
+    border-color: #e0245e;
+    color: #fff;
+}
+
+.blog-like-section .btn-danger,
+.blog-like-section .btn-danger.liked {
+    background-color: #e0245e;
+    border-color: #e0245e;
+    color: #fff;
+    transition: all 0.2s ease-in-out;
+}
+
+.blog-like-section .btn-danger:hover {
+    background-color: #c01e50;
+    border-color: #c01e50;
+}

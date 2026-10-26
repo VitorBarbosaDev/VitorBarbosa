@@ -101,6 +101,7 @@ class BlogPost(models.Model):
         help_text='Feature this blog post on the homepage and highlights.',
     )
     views = models.PositiveIntegerField(default=0, editable=False)
+    likes = models.PositiveIntegerField(default=0, editable=False)
 
     class Meta:
         ordering = ['-created_on']

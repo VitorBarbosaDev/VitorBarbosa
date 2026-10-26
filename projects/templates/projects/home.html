@@ -113,7 +113,7 @@
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">{{ post.title }}</h5>
                     <p class="blog-date mb-1"><small>{{ post.created_on|date:"M d, Y" }}</small></p>
-                    <p class="blog-views text-muted-light mb-2"><small><i class="fas fa-eye"></i> {{ post.views }} view{{ post.views|pluralize }}</small></p>
+                    <p class="blog-views text-muted-light mb-2"><small><i class="fas fa-eye"></i> {{ post.views }} view{{ post.views|pluralize }} · <i class="fas fa-heart text-danger"></i> {{ post.likes }} like{{ post.likes|pluralize }}</small></p>
                     <div class="card-text">{{ post.content|truncatewords_html:25|safe }}</div>
                     <div class="mt-2 mb-3">
                         {% for proj in post.projects.all %}

@@ -9,8 +9,14 @@ Django 4.2 portfolio site for a developer (Vitor Barbosa) showcasing Full Stack 
 - **Single Django app (`projects/`)** — contains all models, views, admin, templates, and custom template tags.
 - **`portfolio/`** — Django project config (settings, root URL conf, WSGI).
 - **Models**: `Project` (portfolio entries with slug, category/template selectors), `ProjectImage` (M2M gallery images), `Profile` (singleton site owner info with `itch_io` URL field), `CV` (singleton resume file), `BlogPost` (blog entries optionally tagged to projects, with draft/live workflow and view tracking), `BlogImage` (multiple images per blog post), `Subscriber` (email subscribers for blog notifications).
+- **Admin MFA / 2FA**: Two-Factor Authentication enforced on Django Admin via `django-otp` (`CustomOTPAdminSite`, `TOTPDevice`, and `StaticDevice` for emergency backup recovery tokens).
+  - **In-Admin User Setup**: Clicking into any User in the Django Admin (`/admin/auth/user/<id>/change/`) provides an interactive MFA security panel and object tool button (**"📱 Add / Manage MFA"** / **"Add MFA to Account"**).
+  - **QR Code Scanning**: The setup flow (`/admin/auth/user/<id>/mfa/setup/`) renders a high-resolution, scannable QR code compatible with Google Authenticator, Authy, Microsoft Authenticator, 1Password, and Apple Passwords, alongside a Base32 manual entry key with one-click copy.
+  - **Token Verification & Backup Codes**: Entering a 6-digit TOTP code verifies and activates MFA, automatically generating 8 single-use emergency backup recovery tokens.
+  - **Management**: Active accounts display remaining backup tokens, options to regenerate emergency tokens, re-configure the device, or disable MFA.
+  - **Progressive Enforcement**: Accounts without configured MFA devices can log in with standard credentials to configure their authenticator; once confirmed, OTP verification is strictly enforced. Alternatively, administrators can use `python manage.py setup_admin_mfa [username]`.
 - **`Project` link/label fields**: `github_link`, `live_link`, `download_link`, `external_link` (all optional URLFields) plus matching label overrides `github_label`, `live_label`, `download_label`, `external_label` (CharField, max 50, each with a sensible default). Also `trailer_url` (optional YouTube URL for a promo trailer) and `slug` (unique SlugField, auto-generated from title, prepopulated in admin).
-- **`BlogPost` extra fields**: `image` (optional `CloudinaryField` hero image), `video_url` (optional YouTube URL, passed through `youtube_embed` filter in the template), `is_live` (boolean, default `False` — only live posts are visible on the site), `featured` (boolean, default `False` — featured posts highlighted on homepage CTA), `views` (auto-incremented page-view counter, non-editable).
+- **`BlogPost` extra fields**: `image` (optional `CloudinaryField` hero image), `video_url` (optional YouTube URL, passed through `youtube_embed` filter in the template), `is_live` (boolean, default `False` — only live posts are visible on the site), `featured` (boolean, default `False` — featured posts highlighted on homepage CTA), `views` (auto-incremented page-view counter, non-editable), `likes` (tracked like counter, non-editable).
 - **Views are all function-based**, each rendering a specific template. No class-based views, no REST API.
 - **Project detail routing & template selection**: Routed at `/project/<slug>/` (with 301 redirect fallback for legacy `/project/<pk>/` URLs). Uses dynamic template selection: `project_detail_{project.template}.html` — templates are `default`, `gallery`, `feature` (see `TEMPLATE_CHOICES` in `projects/models.py` and corresponding files in `projects/templates/projects/`).
 
@@ -30,7 +36,7 @@ Django 4.2 portfolio site for a developer (Vitor Barbosa) showcasing Full Stack 
 - **`env.py`** sets local dev environment variables (`DATABASE_URL`, `SECRET_KEY`, `CLOUDINARY_URL`, `EMAIL_HOST_*`, `DEVELOPMENT=True`). It is imported only if the file exists. Never commit real secrets — this file is for local dev.
 - **`DEBUG`** is `True` only when env var `DEVELOPMENT == "True"`. Production enforces SSL, HSTS, secure cookies.
 - **Database**: PostgreSQL via `dj_database_url`. Falls back to SQLite for tests (`if 'test' in sys.argv`).
-- **Supabase RLS**: Row Level Security is enabled on all app tables via `RunPython` migrations (`0008_enable_rls_on_all_tables`, `0010_enable_rls_blog_tables`). When adding new models, create a similar migration that calls `ALTER TABLE public."<table>" ENABLE ROW LEVEL SECURITY;` for each new table — the helper skips execution automatically on SQLite.
+- **Supabase RLS**: Row Level Security is enabled on all app tables via `RunPython` migrations (`0008_enable_rls_on_all_tables`, `0010_enable_rls_blog_tables`, `0012_enable_rls_subscriber`, `0017_enable_rls_otp_tables`). When adding new models, create a similar migration that calls `ALTER TABLE public."<table>" ENABLE ROW LEVEL SECURITY;` for each new table — the helper skips execution automatically on SQLite.
 
 ## Developer Workflow
 
@@ -40,6 +46,9 @@ Django 4.2 portfolio site for a developer (Vitor Barbosa) showcasing Full Stack 
 
 # Run dev server
 python manage.py runserver
+
+# Setup / reset Admin MFA (generates QR code and emergency backup recovery tokens)
+python manage.py setup_admin_mfa [username]
 
 # Migrations after model changes
 python manage.py makemigrations
@@ -66,7 +75,8 @@ python manage.py test
 - **`BlogPost`** can be tagged to zero or more `Project` entries via M2M. Untagged posts represent "side projects."
 - **Draft/live workflow**: posts default to `is_live=False` (draft). Use the **"Go live"** admin action to publish, or **"Take offline"** to revert. All public queries (`blog_list`, `blog_detail`, `project_detail`) filter on `is_live=True`.
 - **View tracking**: `blog_detail` increments `views` atomically via `F()` expression on each page load. The count is displayed in the detail template and visible as a read-only field in admin.
-- Blog list (`/blog/`) supports filtering: `?project=<slug>` (or legacy `?project=<pk>`) for a specific project, `?untagged=1` for side projects only. Paginated (6 per page). Displays featured projects as individual filter buttons and remaining projects with blogs in a dropdown menu. Project names in filter buttons, dropdowns, and card badges are truncated to prevent layout overflow.
+- **Like tracking**: readers can like/unlike live blog posts via interactive AJAX/POST button at `/blog/<slug>/like/`. Session-tracked (`request.session['liked_posts']`) with atomic increment/decrement on `BlogPost.likes`. Total likes are displayed on blog detail, blog list, and homepage cards, and visible as a read-only field in admin.
+- Blog list (`/blog/`) supports filtering: `?project=<slug>` (or legacy `?project=<pk>`) for a specific project, `?untagged=1` for side projects only, and sorting: `?sort=date` (default), `?sort=views`, or `?sort=likes`. Paginated (6 per page). Displays featured projects as individual filter buttons and remaining projects with blogs in a dropdown menu. Project names in filter buttons, dropdowns, and card badges are truncated to prevent layout overflow.
 - **Homepage Blog CTA**: Homepage features a "From the Blog" section highlighting featured/latest live posts with direct links to blog posts, the blog archive, and subscription signup.
 - Blog detail (`/blog/<slug>/`) renders Summernote rich text, embedded YouTube videos (`youtube_embed` filter), Giphy GIFs (`embed_gifs` filter), and a clickable screenshot gallery via `BlogImage`.
 - **Project detail pages** automatically show a "Blog Posts About This Project" section when tagged **live** posts exist — no extra config needed.

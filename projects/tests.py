@@ -1,5 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
+from django.contrib.auth.models import User
+from django_otp.plugins.otp_totp.models import TOTPDevice
 from .models import BlogPost, Project, Profile, ProjectImage, BlogImage
 
 class BlogSortTest(TestCase):
@@ -15,6 +17,7 @@ class BlogSortTest(TestCase):
             slug="post-1",
             content="Content 1",
             views=10,
+            likes=20,
             is_live=True
         )
         self.post2 = BlogPost.objects.create(
@@ -22,6 +25,7 @@ class BlogSortTest(TestCase):
             slug="post-2",
             content="Content 2",
             views=50,
+            likes=5,
             is_live=True
         )
         self.post3 = BlogPost.objects.create(
@@ -29,6 +33,7 @@ class BlogSortTest(TestCase):
             slug="post-3",
             content="Content 3",
             views=5,
+            likes=100,
             is_live=True
         )
         # Manually adjust created_on is hard because of auto_now_add, 
@@ -50,6 +55,14 @@ class BlogSortTest(TestCase):
         self.assertEqual(posts[0].title, "Post 2") # 50 views
         self.assertEqual(posts[1].title, "Post 1") # 10 views
         self.assertEqual(posts[2].title, "Post 3") # 5 views
+
+    def test_blog_list_likes_sort(self):
+        """Test that the blog list can be sorted by likes (post3, then post1, then post2)"""
+        response = self.client.get(reverse('blog_list') + '?sort=likes')
+        posts = list(response.context['page_obj'])
+        self.assertEqual(posts[0].title, "Post 3") # 100 likes
+        self.assertEqual(posts[1].title, "Post 1") # 20 likes
+        self.assertEqual(posts[2].title, "Post 2") # 5 likes
 
     def test_blog_list_explicit_date_sort(self):
         """Test that the blog list can be explicitly sorted by date"""
@@ -571,3 +584,677 @@ class BlogHomepageAndFilterTest(TestCase):
         self.assertIn('featured', proj_admin.list_editable)
         self.assertIn('make_featured', proj_admin.actions)
         self.assertIn('remove_featured', proj_admin.actions)
+
+
+class BlogLikesTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.profile = Profile.objects.create(
+            name="Vitor Barbosa",
+            title="Full Stack Developer",
+            email="vitor@example.com",
+            phone="123456789",
+            linkedin="https://linkedin.com",
+            github="https://github.com",
+            itch_io="https://itch.io",
+            bio="<p>Full stack and game dev</p>"
+        )
+        self.post = BlogPost.objects.create(
+            title="Awesome Unity Shaders Tutorial",
+            slug="awesome-unity-shaders-tutorial",
+            content="<p>How to write custom shaders in Unity.</p>",
+            is_live=True,
+            likes=0,
+            views=10,
+        )
+        self.draft_post = BlogPost.objects.create(
+            title="Unpublished Draft Post",
+            slug="unpublished-draft-post",
+            content="<p>Draft content</p>",
+            is_live=False,
+            likes=0,
+            views=0,
+        )
+
+    def test_blog_post_like_standard_post_request(self):
+        """Standard form POST to like increments likes, stores in session, and redirects"""
+        response = self.client.post(reverse('blog_like', args=[self.post.slug]))
+        self.assertRedirects(response, reverse('blog_detail', args=[self.post.slug]))
+
+        self.post.refresh_from_db()
+        self.assertEqual(self.post.likes, 1)
+
+        # Check session
+        session = self.client.session
+        self.assertIn(self.post.pk, session.get('liked_posts', []))
+
+    def test_blog_post_like_ajax_request(self):
+        """AJAX POST to like returns JSON with liked status and count"""
+        response = self.client.post(
+            reverse('blog_like', args=[self.post.slug]),
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertTrue(data['liked'])
+        self.assertEqual(data['likes_count'], 1)
+
+        self.post.refresh_from_db()
+        self.assertEqual(self.post.likes, 1)
+
+    def test_blog_post_unlike_toggle_standard(self):
+        """Liking an already liked post toggles unlike and decrements likes count"""
+        # First like
+        self.client.post(reverse('blog_like', args=[self.post.slug]))
+        self.post.refresh_from_db()
+        self.assertEqual(self.post.likes, 1)
+
+        # Second request (unlike)
+        response = self.client.post(reverse('blog_like', args=[self.post.slug]))
+        self.assertRedirects(response, reverse('blog_detail', args=[self.post.slug]))
+
+        self.post.refresh_from_db()
+        self.assertEqual(self.post.likes, 0)
+        session = self.client.session
+        self.assertNotIn(self.post.pk, session.get('liked_posts', []))
+
+    def test_blog_post_unlike_toggle_ajax(self):
+        """AJAX requests toggle like and unlike with accurate JSON responses"""
+        # First AJAX like
+        res1 = self.client.post(
+            reverse('blog_like', args=[self.post.slug]),
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
+        self.assertEqual(res1.status_code, 200)
+        self.assertEqual(res1.json(), {'liked': True, 'likes_count': 1})
+
+        # Second AJAX unlike
+        res2 = self.client.post(
+            reverse('blog_like', args=[self.post.slug]),
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
+        self.assertEqual(res2.status_code, 200)
+        self.assertEqual(res2.json(), {'liked': False, 'likes_count': 0})
+
+    def test_blog_post_like_draft_returns_404(self):
+        """Attempting to like a draft post returns 404"""
+        response = self.client.post(reverse('blog_like', args=[self.draft_post.slug]))
+        self.assertEqual(response.status_code, 404)
+
+    def test_blog_post_like_nonexistent_returns_404(self):
+        """Attempting to like a non-existent post slug returns 404"""
+        response = self.client.post(reverse('blog_like', args=['does-not-exist']))
+        self.assertEqual(response.status_code, 404)
+
+    def test_blog_post_like_get_request_redirects(self):
+        """GET request to blog_like redirects to blog_detail without modifying likes"""
+        response = self.client.get(reverse('blog_like', args=[self.post.slug]))
+        self.assertRedirects(response, reverse('blog_detail', args=[self.post.slug]))
+        self.post.refresh_from_db()
+        self.assertEqual(self.post.likes, 0)
+
+    def test_blog_detail_renders_like_button_and_unliked_state(self):
+        """Blog detail template renders like button in unliked state initially"""
+        response = self.client.get(reverse('blog_detail', args=[self.post.slug]))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'id="like-btn"')
+        self.assertContains(response, 'Like')
+        self.assertFalse(response.context['is_liked'])
+
+    def test_blog_detail_renders_liked_state_from_session(self):
+        """Blog detail template reflects liked state when session contains the post ID"""
+        session = self.client.session
+        session['liked_posts'] = [self.post.pk]
+        session.save()
+
+        response = self.client.get(reverse('blog_detail', args=[self.post.slug]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['is_liked'])
+        self.assertContains(response, 'Liked')
+
+    def test_blog_list_and_home_show_likes_count(self):
+        """Blog list and Home page display the likes count on blog cards"""
+        self.post.likes = 7
+        self.post.save()
+
+        # Blog list page
+        response_list = self.client.get(reverse('blog_list'))
+        self.assertEqual(response_list.status_code, 200)
+        self.assertContains(response_list, '7 likes')
+
+        # Home page
+        response_home = self.client.get(reverse('home'))
+        self.assertEqual(response_home.status_code, 200)
+        self.assertContains(response_home, '7 likes')
+
+    def test_admin_blog_post_likes_field(self):
+        """BlogPostAdmin includes likes in list_display and readonly_fields"""
+        from django.contrib import admin
+        blog_admin = admin.site._registry[BlogPost]
+        self.assertIn('likes', blog_admin.list_display)
+        self.assertIn('likes', blog_admin.readonly_fields)
+
+    def test_multiple_posts_liked_in_same_session(self):
+        """Multiple blog posts can be liked and toggled independently in the same session"""
+        post2 = BlogPost.objects.create(
+            title="Second Blog Post",
+            slug="second-blog-post",
+            content="<p>More dev content</p>",
+            is_live=True,
+            likes=0,
+        )
+
+        # Like first post
+        self.client.post(reverse('blog_like', args=[self.post.slug]))
+        # Like second post
+        self.client.post(reverse('blog_like', args=[post2.slug]))
+
+        self.post.refresh_from_db()
+        post2.refresh_from_db()
+        self.assertEqual(self.post.likes, 1)
+        self.assertEqual(post2.likes, 1)
+
+        session = self.client.session
+        self.assertIn(self.post.pk, session.get('liked_posts', []))
+        self.assertIn(post2.pk, session.get('liked_posts', []))
+
+        # Unlike first post only
+        self.client.post(reverse('blog_like', args=[self.post.slug]))
+        self.post.refresh_from_db()
+        post2.refresh_from_db()
+        self.assertEqual(self.post.likes, 0)
+        self.assertEqual(post2.likes, 1)
+
+        session = self.client.session
+        self.assertNotIn(self.post.pk, session.get('liked_posts', []))
+        self.assertIn(post2.pk, session.get('liked_posts', []))
+
+    def test_likes_count_never_drops_below_zero(self):
+        """Even if unliked when DB count is 0, likes does not become negative"""
+        self.post.likes = 0
+        self.post.save()
+
+        # Simulate session having post marked as liked while DB likes is 0
+        session = self.client.session
+        session['liked_posts'] = [self.post.pk]
+        session.save()
+
+        self.client.post(reverse('blog_like', args=[self.post.slug]))
+        self.post.refresh_from_db()
+        self.assertEqual(self.post.likes, 0)
+
+
+class AdminMFATest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_superuser(
+            username="admin_user",
+            email="admin@example.com",
+            password="securepassword123",
+        )
+        self.totp_device = TOTPDevice.objects.create(
+            user=self.user,
+            name="default",
+            confirmed=True,
+        )
+
+    def test_admin_site_is_otp_admin_site(self):
+        """Admin site is configured as CustomOTPAdminSite with CustomOTPAdminAuthenticationForm"""
+        from django.contrib import admin
+        from django_otp.admin import OTPAdminSite
+        from projects.admin import CustomOTPAdminSite, CustomOTPAdminAuthenticationForm
+
+        self.assertIsInstance(admin.site, OTPAdminSite)
+        self.assertIsInstance(admin.site, CustomOTPAdminSite)
+        self.assertEqual(admin.site.login_form, CustomOTPAdminAuthenticationForm)
+
+    def test_admin_unauthenticated_redirects_to_login(self):
+        """Unauthenticated requests to /admin/ redirect to the admin login page"""
+        response = self.client.get('/admin/')
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/admin/login/', response.url)
+
+    def test_admin_user_without_mfa_can_login_with_username_and_password(self):
+        """A user without MFA configured can log in with standard username & password without an OTP token"""
+        no_mfa_user = User.objects.create_superuser(
+            username="plain_admin",
+            email="plain@example.com",
+            password="plainpassword123",
+        )
+        login_response = self.client.post('/admin/login/', {
+            'username': 'plain_admin',
+            'password': 'plainpassword123',
+            'otp_token': '',
+            'next': '/admin/',
+        })
+        self.assertEqual(login_response.status_code, 302)
+        self.assertIn('/admin/', login_response.url)
+
+        admin_response = self.client.get('/admin/')
+        self.assertEqual(admin_response.status_code, 200)
+
+        # Can also access specific admin pages
+        project_admin_response = self.client.get('/admin/projects/project/')
+        self.assertEqual(project_admin_response.status_code, 200)
+
+    def test_admin_user_with_unconfirmed_device_can_login_without_token(self):
+        """A user with an unconfirmed TOTP device is not locked out and can log in without OTP token"""
+        unconfirmed_user = User.objects.create_superuser(
+            username="unconfirmed_admin",
+            email="unconf@example.com",
+            password="unconfirmedpass123",
+        )
+        TOTPDevice.objects.create(
+            user=unconfirmed_user,
+            name="unconfirmed_default",
+            confirmed=False,
+        )
+        login_response = self.client.post('/admin/login/', {
+            'username': 'unconfirmed_admin',
+            'password': 'unconfirmedpass123',
+            'otp_token': '',
+            'next': '/admin/',
+        })
+        self.assertEqual(login_response.status_code, 302)
+        self.assertIn('/admin/', login_response.url)
+
+        admin_response = self.client.get('/admin/')
+        self.assertEqual(admin_response.status_code, 200)
+
+    def test_admin_user_with_mfa_cannot_login_without_token(self):
+        """A user with confirmed MFA cannot log in without providing an OTP token"""
+        login_response = self.client.post('/admin/login/', {
+            'username': 'admin_user',
+            'password': 'securepassword123',
+            'otp_token': '',
+            'next': '/admin/',
+        })
+        self.assertEqual(login_response.status_code, 200)
+        self.assertIn('Please enter your OTP token.', str(login_response.context['form'].errors))
+
+        # /admin/ remains inaccessible
+        admin_response = self.client.get('/admin/')
+        self.assertEqual(admin_response.status_code, 302)
+
+    def test_admin_unverified_session_redirects_to_login(self):
+        """A user logged in without completing OTP verification is blocked from /admin/"""
+        self.client.force_login(self.user)
+        response = self.client.get('/admin/')
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/admin/login/', response.url)
+
+    def test_admin_login_with_valid_totp_token(self):
+        """Logging in with correct credentials and valid TOTP code succeeds and grants admin access"""
+        from django_otp.oath import totp
+
+        token = str(totp(self.totp_device.bin_key)).zfill(6)
+        login_response = self.client.post('/admin/login/', {
+            'username': 'admin_user',
+            'password': 'securepassword123',
+            'otp_token': token,
+            'next': '/admin/',
+        })
+        self.assertEqual(login_response.status_code, 302)
+        self.assertIn('/admin/', login_response.url)
+
+        admin_response = self.client.get('/admin/')
+        self.assertEqual(admin_response.status_code, 200)
+
+    def test_admin_login_with_invalid_totp_token(self):
+        """Logging in with incorrect TOTP code fails authentication and keeps admin access protected"""
+        login_response = self.client.post('/admin/login/', {
+            'username': 'admin_user',
+            'password': 'securepassword123',
+            'otp_token': '000000',
+            'next': '/admin/',
+        })
+        # Stays on login page (form error)
+        self.assertEqual(login_response.status_code, 200)
+
+        # /admin/ remains inaccessible
+        admin_response = self.client.get('/admin/')
+        self.assertEqual(admin_response.status_code, 302)
+
+    def test_admin_login_with_static_backup_token(self):
+        """Logging in with an emergency static backup token succeeds and grants admin access"""
+        from django_otp.plugins.otp_static.models import StaticDevice, StaticToken
+
+        static_device = StaticDevice.objects.create(
+            user=self.user,
+            name="backup",
+            confirmed=True,
+        )
+        backup_token = static_device.token_set.create(token=StaticToken.random_token())
+
+        login_response = self.client.post('/admin/login/', {
+            'username': 'admin_user',
+            'password': 'securepassword123',
+            'otp_device': static_device.persistent_id,
+            'otp_token': backup_token.token,
+            'next': '/admin/',
+        })
+        self.assertEqual(login_response.status_code, 302)
+        self.assertIn('/admin/', login_response.url)
+
+        admin_response = self.client.get('/admin/')
+        self.assertEqual(admin_response.status_code, 200)
+
+    def test_static_token_is_single_use(self):
+        """Emergency static backup tokens are consumed on use and cannot be reused"""
+        from django_otp.plugins.otp_static.models import StaticDevice, StaticToken
+
+        static_device = StaticDevice.objects.create(
+            user=self.user,
+            name="backup",
+            confirmed=True,
+        )
+        backup_token = static_device.token_set.create(token=StaticToken.random_token())
+        token_value = backup_token.token
+
+        # First use succeeds
+        res1 = self.client.post('/admin/login/', {
+            'username': 'admin_user',
+            'password': 'securepassword123',
+            'otp_device': static_device.persistent_id,
+            'otp_token': token_value,
+            'next': '/admin/',
+        })
+        self.assertEqual(res1.status_code, 302)
+
+        # Logout
+        self.client.logout()
+
+        # Reusing the same token fails
+        res2 = self.client.post('/admin/login/', {
+            'username': 'admin_user',
+            'password': 'securepassword123',
+            'otp_device': static_device.persistent_id,
+            'otp_token': token_value,
+            'next': '/admin/',
+        })
+        self.assertEqual(res2.status_code, 200)
+
+    def test_setup_admin_mfa_management_command(self):
+        """setup_admin_mfa command configures TOTP device and backup tokens for a user"""
+        from django.core.management import call_command
+        import io
+
+        out = io.StringIO()
+        call_command('setup_admin_mfa', 'admin_user', backup_tokens=3, stdout=out)
+        output = out.getvalue()
+
+        self.assertIn("MFA Setup for user 'admin_user'", output)
+        self.assertIn("Secret Key:", output)
+        self.assertIn("Setup URI:", output)
+        self.assertIn("Emergency Backup Recovery Tokens (3)", output)
+        self.assertIn("MFA successfully configured", output)
+
+    def test_setup_admin_mfa_management_command_auto_detects_single_superuser(self):
+        """setup_admin_mfa auto-detects the sole superuser when no username is provided"""
+        from django.core.management import call_command
+        import io
+
+        out = io.StringIO()
+        call_command('setup_admin_mfa', backup_tokens=2, stdout=out)
+        output = out.getvalue()
+
+        self.assertIn("MFA Setup for user 'admin_user'", output)
+
+    def test_setup_admin_mfa_management_command_reset(self):
+        """setup_admin_mfa with --reset replaces existing TOTP device"""
+        from django.core.management import call_command
+        import io
+
+        old_key = self.totp_device.bin_key
+
+        out = io.StringIO()
+        call_command('setup_admin_mfa', 'admin_user', reset=True, stdout=out)
+        output = out.getvalue()
+
+        self.assertIn("reset", output)
+        new_device = TOTPDevice.objects.get(user=self.user, name="default")
+        self.assertNotEqual(new_device.bin_key, old_key)
+
+    def test_setup_admin_mfa_management_command_nonexistent_user(self):
+        """setup_admin_mfa raises CommandError for non-existent user"""
+        from django.core.management import call_command, CommandError
+
+        with self.assertRaises(CommandError):
+            call_command('setup_admin_mfa', 'nonexistent_user_12345')
+
+    def test_unverified_user_cannot_access_project_admin(self):
+        """Unverified requests to /admin/projects/project/ redirect to login"""
+        self.client.force_login(self.user)
+        response = self.client.get('/admin/projects/project/')
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/admin/login/', response.url)
+
+    def test_verified_user_can_access_project_admin(self):
+        """Verified user with OTP completed can access /admin/projects/project/"""
+        from django_otp.oath import totp
+
+        token = str(totp(self.totp_device.bin_key)).zfill(6)
+        self.client.post('/admin/login/', {
+            'username': 'admin_user',
+            'password': 'securepassword123',
+            'otp_token': token,
+            'next': '/admin/projects/project/',
+        })
+        response = self.client.get('/admin/projects/project/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_admin_multi_device_selection(self):
+        """When user has multiple devices, CustomOTPAdminAuthenticationForm resolves appropriately"""
+        from django_otp.plugins.otp_static.models import StaticDevice, StaticToken
+
+        static_device = StaticDevice.objects.create(
+            user=self.user,
+            name="backup",
+            confirmed=True,
+        )
+        backup_token = static_device.token_set.create(token=StaticToken.random_token())
+
+        # Test logging in by choosing the static device explicitly
+        res = self.client.post('/admin/login/', {
+            'username': 'admin_user',
+            'password': 'securepassword123',
+            'otp_device': static_device.persistent_id,
+            'otp_token': backup_token.token,
+            'next': '/admin/',
+        })
+        self.assertEqual(res.status_code, 302)
+
+    def test_user_admin_changelist_shows_mfa_status(self):
+        """User admin changelist displays 2FA / MFA status badges and setup links"""
+        import django_otp
+        plain_user = User.objects.create_user(
+            username="plain_staff",
+            email="plainstaff@example.com",
+            password="pass",
+            is_staff=True,
+        )
+        self.client.force_login(self.user)
+        session = self.client.session
+        session[django_otp.DEVICE_ID_SESSION_KEY] = self.totp_device.persistent_id
+        session.save()
+
+        res = self.client.get('/admin/auth/user/')
+        self.assertEqual(res.status_code, 200)
+        content = res.content.decode('utf-8')
+        self.assertIn('✓ Active', content)
+        self.assertIn('Not Set', content)
+        self.assertIn('[+ Add MFA]', content)
+
+    def test_user_admin_change_form_shows_unconfigured_panel_and_add_mfa_button(self):
+        """User admin change form shows unconfigured panel and 'Add / Manage MFA' button for users without 2FA"""
+        plain_user = User.objects.create_superuser(
+            username="new_admin",
+            email="newadmin@example.com",
+            password="pass",
+        )
+        self.client.force_login(plain_user)
+
+        res = self.client.get(f'/admin/auth/user/{plain_user.id}/change/')
+        self.assertEqual(res.status_code, 200)
+        content = res.content.decode('utf-8')
+        self.assertIn('2FA / MFA Not Configured', content)
+        self.assertIn('Add MFA to Account (Scan QR Code)', content)
+        self.assertIn('Add / Manage MFA', content)
+
+    def test_user_admin_change_form_shows_active_panel_when_mfa_configured(self):
+        """User admin change form shows active 2FA status and management buttons when MFA is configured"""
+        import django_otp
+        self.client.force_login(self.user)
+        session = self.client.session
+        session[django_otp.DEVICE_ID_SESSION_KEY] = self.totp_device.persistent_id
+        session.save()
+
+        res = self.client.get(f'/admin/auth/user/{self.user.id}/change/')
+        self.assertEqual(res.status_code, 200)
+        content = res.content.decode('utf-8')
+        self.assertIn('Two-Factor Authentication Active', content)
+        self.assertIn('Re-configure / Show QR', content)
+        self.assertIn('Backup Recovery Codes', content)
+        self.assertIn('Disable 2FA', content)
+
+    def test_user_admin_mfa_setup_get_renders_qr_code_and_secret_key(self):
+        """Visiting MFA setup page renders high-resolution scannable QR code and Base32 secret key"""
+        plain_user = User.objects.create_superuser(
+            username="qr_test_user",
+            email="qr@example.com",
+            password="pass",
+        )
+        self.client.force_login(plain_user)
+
+        res = self.client.get(f'/admin/auth/user/{plain_user.id}/mfa/setup/')
+        self.assertEqual(res.status_code, 200)
+        content = res.content.decode('utf-8')
+        self.assertIn('data:image/png;base64,', content)
+        self.assertIn('Scan QR Code with Authenticator App', content)
+        self.assertIn('secretKeyText', content)
+        self.assertIn('Verify & Activate 2FA', content)
+
+    def test_user_admin_mfa_setup_post_invalid_token_shows_error(self):
+        """Submitting an invalid 6-digit token on MFA setup displays a helpful error message"""
+        plain_user = User.objects.create_superuser(
+            username="invalid_otp_user",
+            email="invalid@example.com",
+            password="pass",
+        )
+        self.client.force_login(plain_user)
+
+        # GET creates unconfirmed device
+        self.client.get(f'/admin/auth/user/{plain_user.id}/mfa/setup/')
+        dev = TOTPDevice.objects.get(user=plain_user, confirmed=False)
+
+        res = self.client.post(f'/admin/auth/user/{plain_user.id}/mfa/setup/', {
+            'otp_token': '000000',
+            'device_id': dev.pk,
+        })
+        self.assertEqual(res.status_code, 200)
+        content = res.content.decode('utf-8')
+        self.assertIn('Invalid code', content)
+        self.assertFalse(TOTPDevice.objects.get(user=plain_user).confirmed)
+
+    def test_user_admin_mfa_setup_post_valid_token_confirms_device_and_generates_backup_tokens(self):
+        """Submitting valid 6-digit TOTP code confirms device and provides 8 single-use emergency backup tokens"""
+        from django_otp.oath import totp
+        from django_otp.plugins.otp_static.models import StaticDevice
+
+        plain_user = User.objects.create_superuser(
+            username="confirm_otp_user",
+            email="confirm@example.com",
+            password="pass",
+        )
+        self.client.force_login(plain_user)
+
+        self.client.get(f'/admin/auth/user/{plain_user.id}/mfa/setup/')
+        dev = TOTPDevice.objects.get(user=plain_user, confirmed=False)
+        valid_token = str(totp(dev.bin_key)).zfill(6)
+
+        res = self.client.post(f'/admin/auth/user/{plain_user.id}/mfa/setup/', {
+            'otp_token': valid_token,
+            'device_id': dev.pk,
+        })
+        self.assertEqual(res.status_code, 200)
+        content = res.content.decode('utf-8')
+        self.assertIn('Two-Factor Authentication is now active', content)
+        self.assertIn('Emergency Backup Recovery Tokens', content)
+
+        # Device is confirmed in database
+        dev.refresh_from_db()
+        self.assertTrue(dev.confirmed)
+
+        # Static recovery tokens are created
+        static_dev = StaticDevice.objects.get(user=plain_user, confirmed=True)
+        self.assertEqual(static_dev.token_set.count(), 8)
+
+    def test_user_admin_mfa_backup_tokens_view_and_generate_fresh_tokens(self):
+        """Backup tokens view displays active recovery tokens and allows regenerating 8 new tokens"""
+        import django_otp
+        from django_otp.plugins.otp_static.models import StaticDevice, StaticToken
+
+        self.client.force_login(self.user)
+        session = self.client.session
+        session[django_otp.DEVICE_ID_SESSION_KEY] = self.totp_device.persistent_id
+        session.save()
+
+        static_dev = StaticDevice.objects.create(user=self.user, name="backup", confirmed=True)
+        t1 = static_dev.token_set.create(token=StaticToken.random_token())
+
+        # GET tokens view
+        res = self.client.get(f'/admin/auth/user/{self.user.id}/mfa/backup-tokens/')
+        self.assertEqual(res.status_code, 200)
+        self.assertIn(t1.token, res.content.decode('utf-8'))
+
+        # POST regenerate
+        res_post = self.client.post(f'/admin/auth/user/{self.user.id}/mfa/backup-tokens/', {
+            'action': 'generate',
+        })
+        self.assertEqual(res_post.status_code, 200)
+        self.assertEqual(static_dev.token_set.count(), 8)
+        self.assertFalse(static_dev.token_set.filter(token=t1.token).exists())
+
+    def test_user_admin_mfa_disable_flow(self):
+        """MFA disable view asks confirmation and completely removes 2FA devices and backup tokens"""
+        import django_otp
+        from django_otp.plugins.otp_static.models import StaticDevice
+
+        self.client.force_login(self.user)
+        session = self.client.session
+        session[django_otp.DEVICE_ID_SESSION_KEY] = self.totp_device.persistent_id
+        session.save()
+
+        StaticDevice.objects.create(user=self.user, name="backup", confirmed=True)
+
+        # GET confirmation page
+        res_get = self.client.get(f'/admin/auth/user/{self.user.id}/mfa/disable/')
+        self.assertEqual(res_get.status_code, 200)
+        self.assertIn('Are you sure you want to disable Two-Factor Authentication', res_get.content.decode('utf-8'))
+
+        # POST to disable
+        res_post = self.client.post(f'/admin/auth/user/{self.user.id}/mfa/disable/')
+        self.assertEqual(res_post.status_code, 302)
+        self.assertIn(f'/admin/auth/user/{self.user.id}/change/', res_post.url)
+
+        self.assertEqual(TOTPDevice.objects.filter(user=self.user).count(), 0)
+        self.assertEqual(StaticDevice.objects.filter(user=self.user).count(), 0)
+
+    def test_user_admin_mfa_setup_permission_denied_for_non_privileged_user(self):
+        """Staff user without change_user permission cannot manage MFA for other users"""
+        regular_staff = User.objects.create_user(
+            username="regular_staff",
+            email="regular@example.com",
+            password="pass",
+            is_staff=True,
+        )
+        other_user = User.objects.create_user(
+            username="other_user",
+            email="other@example.com",
+            password="pass",
+            is_staff=True,
+        )
+        self.client.force_login(regular_staff)
+
+        res = self.client.get(f'/admin/auth/user/{other_user.id}/mfa/setup/')
+        self.assertEqual(res.status_code, 403)
