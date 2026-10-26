@@ -1,6 +1,7 @@
 import uuid
 
 from django.db import models
+from django.urls import reverse
 from django.utils.text import slugify
 from cloudinary.models import CloudinaryField
 
@@ -16,6 +17,7 @@ class Project(models.Model):
     ]
 
     title = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=200, unique=True, blank=True)
     description = models.TextField()
     image = CloudinaryField('projects/', default='default.jpg')
     additional_images = models.ManyToManyField('ProjectImage', blank=True)
@@ -32,6 +34,20 @@ class Project(models.Model):
     live_label = models.CharField(max_length=50, default='Live Demo', blank=True)  # Custom label for live demo button
     download_label = models.CharField(max_length=50, default='Download', blank=True)  # Custom label for download button
     external_label = models.CharField(max_length=50, default='External Page', blank=True)  # Custom label for external link button
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.title) or 'project'
+            slug = base_slug
+            counter = 1
+            while Project.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('project_detail', args=[self.slug])
 
     def __str__(self):
         return self.title
@@ -80,6 +96,10 @@ class BlogPost(models.Model):
         default=False,
         help_text='Only live posts are visible on the site.',
     )
+    featured = models.BooleanField(
+        default=False,
+        help_text='Feature this blog post on the homepage and highlights.',
+    )
     views = models.PositiveIntegerField(default=0, editable=False)
 
     class Meta:
@@ -89,6 +109,9 @@ class BlogPost(models.Model):
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('blog_detail', args=[self.slug])
 
     def __str__(self):
         return self.title

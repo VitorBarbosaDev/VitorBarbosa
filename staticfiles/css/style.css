@@ -430,3 +430,27 @@ a[href$=".gif"] {
 .subscribe-cta:hover {
     border-color: #4caf50;
 }
+
+/* ---- Dark Theme Dropdown Menu ---- */
+.dropdown-menu-dark {
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.dropdown-menu-dark .dropdown-item {
+    color: #e0e0e0;
+    transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+
+.dropdown-menu-dark .dropdown-item:hover,
+.dropdown-menu-dark .dropdown-item:focus {
+    background-color: #383838;
+    color: #4caf50;
+}
+
+.dropdown-menu-dark .dropdown-item.active,
+.dropdown-menu-dark .dropdown-item:active {
+    background-color: #4caf50;
+    color: #fff;
+}

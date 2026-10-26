@@ -93,11 +93,54 @@
                     {% if project.external_link %}
                     <a href="{{ project.external_link }}" class="btn btn-info">{{ project.external_label }}</a>
                     {% endif %}
-                    <a href="{% url 'project_detail' project.pk %}" class="btn btn-info">More Info</a>
+                    <a href="{% url 'project_detail' project.slug %}" class="btn btn-info">More Info</a>
                 </div>
             </div>
         </div>
         {% endfor %}
+    </div>
+
+    <h1 class="mt-4">From the Blog</h1>
+    <p class="text-muted-light">Follow along with the latest events in my game development journey.</p>
+    {% if blog_posts %}
+    <div class="row">
+        {% for post in blog_posts %}
+        <div class="col-md-4 pb-4">
+            <div class="card h-100">
+                {% if post.image %}
+                <img src="{{ post.image.url }}" class="card-img-top blog-card-img" alt="{{ post.title }}">
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="blog-date mb-1"><small>{{ post.created_on|date:"M d, Y" }}</small></p>
+                    <p class="blog-views text-muted-light mb-2"><small><i class="fas fa-eye"></i> {{ post.views }} view{{ post.views|pluralize }}</small></p>
+                    <div class="card-text">{{ post.content|truncatewords_html:25|safe }}</div>
+                    <div class="mt-2 mb-3">
+                        {% for proj in post.projects.all %}
+                        <a href="{% url 'blog_list' %}?project={{ proj.slug }}" class="badge blog-badge text-decoration-none" title="{{ proj.title }}">{{ proj.title|truncatechars:20 }}</a>
+                        {% empty %}
+                        <span class="badge blog-badge-muted">Side Project</span>
+                        {% endfor %}
+                    </div>
+                    <a href="{% url 'blog_detail' post.slug %}" class="btn btn-primary mt-auto">Read More</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="subscribe-cta text-center mt-3 mb-5 p-4">
+        <h4 class="text-accent mb-2"><i class="fas fa-book-open"></i> Want to Read More?</h4>
+        <p class="text-muted-light mb-3">Follow along for updates on game design, software architecture, and new project releases.</p>
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+            <a href="{% url 'blog_list' %}" class="btn btn-primary">
+                <i class="fas fa-newspaper"></i> Explore All Blog Posts
+            </a>
+            <a href="{% url 'subscribe' %}" class="btn btn-outline-primary">
+                <i class="fas fa-envelope"></i> Subscribe to Newsletter
+            </a>
+        </div>
     </div>
 
     <h1 class="mt-4">My CV</h1>

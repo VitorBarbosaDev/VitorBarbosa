@@ -15,11 +15,24 @@ class ProjectImageInline(admin.TabularInline):
 
 class ProjectAdmin(SummernoteModelAdmin):
     summernote_fields = ('description',)
-    list_display = ('title', 'category', 'featured', 'template')
+    list_display = ('title', 'slug', 'category', 'featured', 'template')
     list_filter = ('category', 'featured', 'template')
-    search_fields = ('title', 'description')
+    list_editable = ('featured',)
+    search_fields = ('title', 'slug', 'description')
+    prepopulated_fields = {'slug': ('title',)}
     ordering = ('category', 'title')
     inlines = [ProjectImageInline]
+    actions = ['make_featured', 'remove_featured']
+
+    @admin.action(description='Mark selected projects as featured')
+    def make_featured(self, request, queryset):
+        updated = queryset.update(featured=True)
+        self.message_user(request, f'{updated} project(s) marked as featured.')
+
+    @admin.action(description='Unmark selected projects as featured')
+    def remove_featured(self, request, queryset):
+        updated = queryset.update(featured=False)
+        self.message_user(request, f'{updated} project(s) removed from featured.')
 
     class Media:
         css = {
@@ -54,20 +67,31 @@ class BlogImageInline(admin.TabularInline):
 
 class BlogPostAdmin(SummernoteModelAdmin):
     summernote_fields = ('content',)
-    list_display = ('title', 'is_live', 'views', 'created_on', 'updated_on', 'notified')
-    list_filter = ('is_live', 'created_on', 'projects', 'notified')
+    list_display = ('title', 'featured', 'is_live', 'views', 'created_on', 'updated_on', 'notified')
+    list_filter = ('featured', 'is_live', 'created_on', 'projects', 'notified')
+    list_editable = ('featured',)
     search_fields = ('title', 'content')
     prepopulated_fields = {'slug': ('title',)}
     filter_horizontal = ('projects',)
     readonly_fields = ('notified', 'views')
     inlines = [BlogImageInline]
-    actions = ['go_live', 'take_offline', 'send_notifications']
+    actions = ['go_live', 'take_offline', 'make_featured', 'remove_featured', 'send_notifications']
 
     class Media:
         css = {
             'all': ('projects/css/admin_custom.css',),
         }
         js = ('projects/js/admin_custom.js',)
+
+    @admin.action(description='Feature selected posts')
+    def make_featured(self, request, queryset):
+        updated = queryset.update(featured=True)
+        self.message_user(request, f'{updated} post(s) marked as featured.')
+
+    @admin.action(description='Unfeature selected posts')
+    def remove_featured(self, request, queryset):
+        updated = queryset.update(featured=False)
+        self.message_user(request, f'{updated} post(s) removed from featured.')
 
     @admin.action(description='Go live — publish selected posts')
     def go_live(self, request, queryset):

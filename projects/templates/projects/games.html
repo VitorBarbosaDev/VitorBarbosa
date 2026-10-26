@@ -25,7 +25,7 @@
                     {% if project.external_link %}
                     <a href="{{ project.external_link }}" class="btn btn-info">{{ project.external_label }}</a>
                     {% endif %}
-                    <a href="{% url 'project_detail' project.pk %}" class="btn btn-info">More Info</a>
+                    <a href="{% url 'project_detail' project.slug %}" class="btn btn-info">More Info</a>
                 </div>
             </div>
         </div>

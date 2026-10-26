@@ -3120,3 +3120,309 @@ Bad Request: /summernote/editor/id_content/
 Not Found: /.well-known/appspecific/com.chrome.devtools.json
 Not Found: /.well-known/appspecific/com.chrome.devtools.json
 Not Found: /.well-known/appspecific/com.chrome.devtools.json
+Not Found: /project/non-existent-slug/
+Not Found: /project/99999/
+Not Found: /project/non-existent-slug/
+Not Found: /project/99999/
+Watching for file changes with StatReloader
+Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column projects_project.slug does not exist
+LINE 1: ...ojects_project"."id", "projects_project"."title", "projects_...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\projects\views.py", line 13, in home
+    return render(request, 'projects/home.html', {'profile': profile, 'projects': projects, 'cv': cv})
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\defaulttags.py", line 194, in render
+    len_values = len(values)
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\db\models\sql\compiler.py", line 1562, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\db\backends\utils.py", line 102, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\db\backends\utils.py", line 84, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: column projects_project.slug does not exist
+LINE 1: ...ojects_project"."id", "projects_project"."title", "projects_...
+                                                             ^
+
+Not Found: /favicon.ico
+Internal Server Error: /
+Traceback (most recent call last):
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+psycopg2.errors.UndefinedColumn: column projects_project.slug does not exist
+LINE 1: ...ojects_project"."id", "projects_project"."title", "projects_...
+                                                             ^
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\projects\views.py", line 13, in home
+    return render(request, 'projects/home.html', {'profile': profile, 'projects': projects, 'cv': cv})
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\shortcuts.py", line 24, in render
+    content = loader.render_to_string(template_name, context, request, using=using)
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\loader.py", line 62, in render_to_string
+    return template.render(context, request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\backends\django.py", line 61, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\base.py", line 175, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\loader_tags.py", line 157, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\base.py", line 167, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\loader_tags.py", line 63, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\base.py", line 1005, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\base.py", line 966, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\template\defaulttags.py", line 194, in render
+    len_values = len(values)
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\db\models\query.py", line 380, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\db\models\sql\compiler.py", line 1562, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\db\backends\utils.py", line 102, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\db\backends\utils.py", line 84, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: column projects_project.slug does not exist
+LINE 1: ...ojects_project"."id", "projects_project"."title", "projects_...
+                                                             ^
+
+C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\projects\migrations\0014_project_slug.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /project/non-existent-slug/
+Not Found: /project/99999/
+C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\projects\templatetags\custom_filters.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /project/non-existent-slug/
+Not Found: /project/99999/
+Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\utils\deprecation.py", line 133, in __call__
+    response = self.process_request(request)
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\middleware\common.py", line 48, in process_request
+    host = request.get_host()
+  File "C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\myenv\Lib\site-packages\django\http\request.py", line 150, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
+Bad Request: /project/defend-the-farm/
+Not Found: /project/non-existent-slug/
+Not Found: /project/99999/
+C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\projects\templatetags\custom_filters.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /favicon.ico
+Not Found: /project/defend-the-farm/<a href=
+Importing BlpImagePlugin
+Importing BmpImagePlugin
+Importing BufrStubImagePlugin
+Importing CurImagePlugin
+Importing DcxImagePlugin
+Importing DdsImagePlugin
+Importing EpsImagePlugin
+Importing FitsImagePlugin
+Importing FliImagePlugin
+Importing FpxImagePlugin
+Image: failed to import FpxImagePlugin: No module named 'olefile'
+Importing FtexImagePlugin
+Importing GbrImagePlugin
+Importing GifImagePlugin
+Importing GribStubImagePlugin
+Importing Hdf5StubImagePlugin
+Importing IcnsImagePlugin
+Importing IcoImagePlugin
+Importing ImImagePlugin
+Importing ImtImagePlugin
+Importing IptcImagePlugin
+Importing JpegImagePlugin
+Importing Jpeg2KImagePlugin
+Importing McIdasImagePlugin
+Importing MicImagePlugin
+Image: failed to import MicImagePlugin: No module named 'olefile'
+Importing MpegImagePlugin
+Importing MpoImagePlugin
+Importing MspImagePlugin
+Importing PalmImagePlugin
+Importing PcdImagePlugin
+Importing PcxImagePlugin
+Importing PdfImagePlugin
+Importing PixarImagePlugin
+Importing PngImagePlugin
+Importing PpmImagePlugin
+Importing PsdImagePlugin
+Importing QoiImagePlugin
+Importing SgiImagePlugin
+Importing SpiderImagePlugin
+Importing SunImagePlugin
+Importing TgaImagePlugin
+Importing TiffImagePlugin
+Importing WebPImagePlugin
+Importing WmfImagePlugin
+Importing XbmImagePlugin
+Importing XpmImagePlugin
+Importing XVThumbImagePlugin
+Bad Request: /summernote/upload_attachment/
+Bad Request: /summernote/upload_attachment/
+Bad Request: /summernote/upload_attachment/
+Starting new HTTPS connection (1): api.cloudinary.com:443
+https://api.cloudinary.com:443 "POST /v1_1/dtbtvoewx/image/upload HTTP/1.1" 200 None
+Starting new HTTPS connection (1): res.cloudinary.com:443
+https://res.cloudinary.com:443 "HEAD /dtbtvoewx/image/upload/v1/django-summernote/2026-10-26/41a74e5f-98e3-4660-a4b2-e3e6228f5cc5_cbdbcu HTTP/1.1" 200 0
+https://api.cloudinary.com:443 "POST /v1_1/dtbtvoewx/image/upload HTTP/1.1" 200 None
+Starting new HTTPS connection (1): res.cloudinary.com:443
+https://res.cloudinary.com:443 "HEAD /dtbtvoewx/image/upload/v1/django-summernote/2026-10-26/53107247-c482-48d2-b2c6-c8a57f84fcdf_x0brov HTTP/1.1" 200 0
+C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\projects\models.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\projects\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\projects\admin.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\projects\views.py changed, reloading.
+Watching for file changes with StatReloader
+C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\projects\views.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /project/non-existent-slug/
+Not Found: /project/99999/
+C:\Users\Vitor\Desktop\Games\CodeInsitute\VitorBarbosa\projects\templatetags\custom_filters.py changed, reloading.
+Watching for file changes with StatReloader
+Not Found: /project/non-existent-slug/
+Not Found: /project/99999/
+Not Found: /project/non-existent-slug/
+Not Found: /project/99999/
+Not Found: /project/non-existent-slug/
+Not Found: /project/99999/

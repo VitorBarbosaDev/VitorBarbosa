@@ -10,7 +10,17 @@ def home(request):
     profile = Profile.objects.first()
     projects = Project.objects.filter(featured=True)
     cv = CV.objects.first()
-    return render(request, 'projects/home.html', {'profile': profile, 'projects': projects, 'cv': cv})
+    featured_posts = BlogPost.objects.filter(is_live=True, featured=True)
+    if featured_posts.exists():
+        blog_posts = featured_posts[:3]
+    else:
+        blog_posts = BlogPost.objects.filter(is_live=True)[:3]
+    return render(request, 'projects/home.html', {
+        'profile': profile,
+        'projects': projects,
+        'cv': cv,
+        'blog_posts': blog_posts,
+    })
 
 def about(request):
     profile = Profile.objects.first()
@@ -25,8 +35,15 @@ def games(request):
     projects = Project.objects.filter(category='Games')
     return render(request, 'projects/games.html', {'projects': projects})
 
-def project_detail(request, pk):
-    project = get_object_or_404(Project, pk=pk)
+def project_detail(request, slug):
+    project = Project.objects.filter(slug=slug).first()
+    if not project:
+        # Support legacy integer PK URLs with permanent redirect to slug URL
+        if slug.isdigit():
+            project = get_object_or_404(Project, pk=int(slug))
+            return redirect('project_detail', slug=project.slug, permanent=True)
+        get_object_or_404(Project, slug=slug)
+
     blog_posts = BlogPost.objects.filter(projects=project, is_live=True)
     template = f"projects/project_detail_{project.template}.html"
     return render(request, template, {'project': project, 'blog_posts': blog_posts})
@@ -35,9 +52,14 @@ def project_detail(request, pk):
 def blog_list(request):
     posts = BlogPost.objects.filter(is_live=True)
     active_project = None
-    project_pk = request.GET.get('project')
-    if project_pk:
-        active_project = get_object_or_404(Project, pk=project_pk)
+    project_identifier = request.GET.get('project')
+    if project_identifier:
+        if project_identifier.isdigit():
+            active_project = Project.objects.filter(pk=int(project_identifier)).first()
+            if not active_project:
+                active_project = get_object_or_404(Project, slug=project_identifier)
+        else:
+            active_project = get_object_or_404(Project, slug=project_identifier)
         posts = posts.filter(projects=active_project)
 
     # Show untagged posts only
@@ -57,13 +79,30 @@ def blog_list(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    # Projects that have at least one blog post (for filter dropdown)
-    tagged_projects = Project.objects.filter(blog_posts__isnull=False).distinct()
+    # Projects that have at least one live blog post
+    tagged_projects = Project.objects.filter(blog_posts__is_live=True).distinct()
+
+    # Split into featured projects (shown as individual buttons) and other projects (in dropdown)
+    if tagged_projects.filter(featured=True).exists():
+        featured_projects = list(tagged_projects.filter(featured=True))
+        other_projects = list(tagged_projects.filter(featured=False))
+    else:
+        if tagged_projects.count() <= 4:
+            featured_projects = list(tagged_projects)
+            other_projects = []
+        else:
+            featured_projects = list(tagged_projects[:3])
+            other_projects = list(tagged_projects[3:])
+
+    is_active_in_other = active_project is not None and any(p.pk == active_project.pk for p in other_projects)
 
     return render(request, 'projects/blog_list.html', {
         'page_obj': page_obj,
         'active_project': active_project,
         'tagged_projects': tagged_projects,
+        'featured_projects': featured_projects,
+        'other_projects': other_projects,
+        'is_active_in_other': is_active_in_other,
         'show_untagged': show_untagged,
         'current_sort': sort,
     })

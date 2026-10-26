@@ -10,7 +10,7 @@
     {% if post.projects.all %}
     <div class="mb-3">
         {% for proj in post.projects.all %}
-        <a href="{% url 'project_detail' proj.pk %}" class="badge blog-badge text-decoration-none">{{ proj.title }}</a>
+        <a href="{% url 'project_detail' proj.slug %}" class="badge blog-badge text-decoration-none" title="{{ proj.title }}">{{ proj.title|truncatechars:25 }}</a>
         {% endfor %}
     </div>
     {% endif %}
@@ -72,7 +72,7 @@
     <h5>Related Projects</h5>
     <div class="mb-3">
         {% for proj in post.projects.all %}
-        <a href="{% url 'project_detail' proj.pk %}" class="btn btn-outline-primary me-1 mb-1">{{ proj.title }}</a>
+        <a href="{% url 'project_detail' proj.slug %}" class="btn btn-outline-primary me-1 mb-1">{{ proj.title }}</a>
         {% endfor %}
     </div>
     {% endif %}

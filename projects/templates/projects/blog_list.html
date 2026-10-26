@@ -15,27 +15,50 @@
 
     <!-- Filter and Sort bar -->
     <div class="mb-4 d-flex flex-wrap justify-content-between align-items-center">
-        <div>
+        <div class="d-flex flex-wrap align-items-center">
             <a href="{% url 'blog_list' %}{% if current_sort %}?sort={{ current_sort }}{% endif %}" class="btn btn-sm {% if not active_project and not show_untagged %}btn-primary{% else %}btn-outline-primary{% endif %} me-1 mb-1">All</a>
-            {% for proj in tagged_projects %}
-            <a href="{% url 'blog_list' %}?project={{ proj.pk }}{% if current_sort %}&sort={{ current_sort }}{% endif %}"
-               class="btn btn-sm {% if active_project.pk == proj.pk %}btn-primary{% else %}btn-outline-primary{% endif %} me-1 mb-1">
-                {{ proj.title }}
+            {% for proj in featured_projects %}
+            <a href="{% url 'blog_list' %}?project={{ proj.slug }}{% if current_sort %}&sort={{ current_sort }}{% endif %}"
+               class="btn btn-sm {% if active_project.pk == proj.pk %}btn-primary{% else %}btn-outline-primary{% endif %} me-1 mb-1"
+               title="{{ proj.title }}">
+                {{ proj.title|truncatechars:20 }}
             </a>
             {% endfor %}
             <a href="{% url 'blog_list' %}?untagged=1{% if current_sort %}&sort={{ current_sort }}{% endif %}"
                class="btn btn-sm {% if show_untagged %}btn-primary{% else %}btn-outline-primary{% endif %} me-1 mb-1">
                 Side Projects
             </a>
+            {% if other_projects %}
+            <div class="dropdown d-inline-block me-1 mb-1">
+                <button class="btn btn-sm {% if is_active_in_other %}btn-primary{% else %}btn-outline-primary{% endif %} dropdown-toggle" type="button" id="moreProjectsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    {% if is_active_in_other %}
+                        {{ active_project.title|truncatechars:18 }}
+                    {% else %}
+                        More Projects
+                    {% endif %}
+                </button>
+                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="moreProjectsDropdown">
+                    {% for proj in other_projects %}
+                    <li>
+                        <a class="dropdown-item {% if active_project.pk == proj.pk %}active{% endif %}"
+                           href="{% url 'blog_list' %}?project={{ proj.slug }}{% if current_sort %}&sort={{ current_sort }}{% endif %}"
+                           title="{{ proj.title }}">
+                            {{ proj.title|truncatechars:25 }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
         </div>
         <div class="ms-auto mb-1">
             <span class="text-muted-light me-2">Sort by:</span>
             <div class="btn-group" role="group">
-                <a href="?{% if active_project %}project={{ active_project.pk }}&{% endif %}{% if show_untagged %}untagged=1&{% endif %}sort=date" 
+                <a href="?{% if active_project %}project={{ active_project.slug }}&{% endif %}{% if show_untagged %}untagged=1&{% endif %}sort=date" 
                    class="btn btn-sm {% if current_sort != 'views' %}btn-primary{% else %}btn-outline-primary{% endif %}">
                     Latest
                 </a>
-                <a href="?{% if active_project %}project={{ active_project.pk }}&{% endif %}{% if show_untagged %}untagged=1&{% endif %}sort=views" 
+                <a href="?{% if active_project %}project={{ active_project.slug }}&{% endif %}{% if show_untagged %}untagged=1&{% endif %}sort=views" 
                    class="btn btn-sm {% if current_sort == 'views' %}btn-primary{% else %}btn-outline-primary{% endif %}">
                     Most Viewed
                 </a>
@@ -58,7 +81,7 @@
                     <div class="card-text">{{ post.content|truncatewords_html:30|safe }}</div>
                     <div class="mt-2 mb-2">
                         {% for proj in post.projects.all %}
-                        <a href="{% url 'blog_list' %}?project={{ proj.pk }}" class="badge blog-badge text-decoration-none">{{ proj.title }}</a>
+                        <a href="{% url 'blog_list' %}?project={{ proj.slug }}" class="badge blog-badge text-decoration-none" title="{{ proj.title }}">{{ proj.title|truncatechars:20 }}</a>
                         {% empty %}
                         <span class="badge blog-badge-muted">Side Project</span>
                         {% endfor %}
@@ -76,17 +99,17 @@
         <ul class="pagination justify-content-center">
             {% if page_obj.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?{% if active_project %}project={{ active_project.pk }}&{% endif %}{% if show_untagged %}untagged=1&{% endif %}{% if current_sort %}sort={{ current_sort }}&{% endif %}page={{ page_obj.previous_page_number }}">Previous</a>
+                <a class="page-link" href="?{% if active_project %}project={{ active_project.slug }}&{% endif %}{% if show_untagged %}untagged=1&{% endif %}{% if current_sort %}sort={{ current_sort }}&{% endif %}page={{ page_obj.previous_page_number }}">Previous</a>
             </li>
             {% endif %}
             {% for num in page_obj.paginator.page_range %}
             <li class="page-item {% if page_obj.number == num %}active{% endif %}">
-                <a class="page-link" href="?{% if active_project %}project={{ active_project.pk }}&{% endif %}{% if show_untagged %}untagged=1&{% endif %}{% if current_sort %}sort={{ current_sort }}&{% endif %}page={{ num }}">{{ num }}</a>
+                <a class="page-link" href="?{% if active_project %}project={{ active_project.slug }}&{% endif %}{% if show_untagged %}untagged=1&{% endif %}{% if current_sort %}sort={{ current_sort }}&{% endif %}page={{ num }}">{{ num }}</a>
             </li>
             {% endfor %}
             {% if page_obj.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?{% if active_project %}project={{ active_project.pk }}&{% endif %}{% if show_untagged %}untagged=1&{% endif %}{% if current_sort %}sort={{ current_sort }}&{% endif %}page={{ page_obj.next_page_number }}">Next</a>
+                <a class="page-link" href="?{% if active_project %}project={{ active_project.slug }}&{% endif %}{% if show_untagged %}untagged=1&{% endif %}{% if current_sort %}sort={{ current_sort }}&{% endif %}page={{ page_obj.next_page_number }}">Next</a>
             </li>
             {% endif %}
         </ul>
@@ -98,9 +121,9 @@
     {% endif %}
 
     <!-- Subscribe CTA -->
-    <div class="text-center mt-4 mb-4 p-4" style="background-color:#2a2a2a;border-radius:8px;">
-        <h5 class="text-accent"><i class="fas fa-envelope"></i> Stay Updated</h5>
-        <p class="text-muted-light mb-3">Get notified when new blog posts are published.</p>
+    <div class="subscribe-cta text-center mt-5 mb-4 p-4">
+        <h5 class="text-accent mb-2"><i class="fas fa-envelope"></i> Stay Updated</h5>
+        <p class="text-muted-light mb-3">Get notified when new blog posts are published — follow all updates or just the projects you care about.</p>
         <a href="{% url 'subscribe' %}" class="btn btn-primary">
             <i class="fas fa-paper-plane"></i> Subscribe
         </a>

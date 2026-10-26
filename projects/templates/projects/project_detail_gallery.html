@@ -54,7 +54,7 @@
         </li>
         {% endfor %}
     </ul>
-    <a href="{% url 'blog_list' %}?project={{ project.pk }}" class="btn btn-outline-primary btn-sm">View all blog posts →</a>
+    <a href="{% url 'blog_list' %}?project={{ project.slug }}" class="btn btn-outline-primary btn-sm">View all blog posts →</a>
     {% endif %}
 </div>
 
